@@ -45,20 +45,17 @@ function displayQuestion() {
     const question = questions[currentQuestionIndex];
     const totalQuestions = questions.length;
 
-    // Update progress indicator to show "Question X of Y"
     document.getElementById("current-question-header").innerText =
         `Question ${currentQuestionIndex + 1} of ${totalQuestions}`;
-
-    // Display the main question text with a larger font size
+    
     const questionTextElement = document.getElementById("question-text");
-    questionTextElement.style.fontSize = "1.5em"; // Set larger font size for main question text
+    questionTextElement.style.fontSize = "1.5em";
     questionTextElement.innerText = question.question;
 
     selectedResponse = responses[currentQuestionIndex] || null;
     updateLikertSelection();
     setupLikertListeners();
 }
-
 
 function setupLikertListeners() {
     const segments = document.querySelectorAll('.bar-segment');
@@ -107,25 +104,63 @@ function prevQuestion() {
 }
 
 function saveResponse() {
-    const scoreValue = selectedResponse;
     const question = questions[currentQuestionIndex];
+    
+    // Remove previous score if it exists to avoid double counting
     if (responses[currentQuestionIndex]) removePreviousScore();
 
-    responses[currentQuestionIndex] = scoreValue;
-    scores[question.trait] += scoreValue;
-    scores[question.cluster] += scoreValue;
-    updateScores();
+    responses[currentQuestionIndex] = selectedResponse;
+
+    // Determine the scores to apply based on response (agree or disagree)
+    const scoresToApply = selectedResponse >= 3 ? question.facet.agreeScores : question.facet.disagreeScores;
+
+    // Apply scores to the respective aspect
+    for (const [aspect, value] of Object.entries(scoresToApply)) {
+        if (scores[aspect] !== undefined) {
+            scores[aspect] += value;
+        } else {
+            console.warn(`Aspect ${aspect} not found in scores object.`);
+        }
+    }
+
+    // Update the Big 5 traits based on the sum of their respective aspects
+    updateBig5Scores();
+
+    // Log the updated scores to the console for debugging
+    console.log("Current Scores:", scores);
 }
 
 function removePreviousScore() {
     const previousScore = responses[currentQuestionIndex];
     if (previousScore) {
         const question = questions[currentQuestionIndex];
-        scores[question.trait] -= previousScore;
-        scores[question.cluster] -= previousScore;
+        const scoresToRemove = previousScore >= 4 ? question.facet.agreeScores : question.facet.disagreeScores;
+        for (const [trait, weight] of Object.entries(scoresToRemove)) {
+            scores[trait] -= weight;
+        }
         delete responses[currentQuestionIndex];
         updateScores();
+        logScores(); // Log scores to console after removing
     }
+}
+
+// Display all scores in the console
+function logScores() {
+    console.log("Current Scores:");
+    for (const [trait, score] of Object.entries(scores)) {
+        console.log(`${trait}: ${score.toFixed(2)}`);
+    }
+}
+
+// Calculate Big 5 scores as the sum of their respective aspects
+function updateBig5Scores() {
+    scores.Openness = scores.Intellect + scores.Receptivity;
+    scores.Conscientiousness = scores.Industriousness + scores.Orderliness;
+    scores.Extraversion = scores.Enthusiasm + scores.Assertiveness;
+    scores.Agreeableness = scores.Compassion + scores.Politeness;
+    scores.Neuroticism = scores.Volatility + scores.Withdrawal;
+
+    updateScores();
 }
 
 function updateScores() {
@@ -173,12 +208,31 @@ function renderAllCharts() {
 }
 
 function createBarChart(ctx, labels, data, title) {
+    const maxScore = Math.max(...data) * 1.2; // Add a 20% buffer for padding above the max score
+
     return new Chart(ctx, {
         type: 'bar',
-        data: { labels, datasets: [{ label: title, data, backgroundColor: generateChartColors(labels.length, 0.6), borderWidth: 1 }] },
-        options: { scales: { y: { beginAtZero: true, max: 25 } } }
+        data: { 
+            labels, 
+            datasets: [{
+                label: title,
+                data,
+                backgroundColor: generateChartColors(labels.length, 0.6),
+                borderWidth: 1 
+            }]
+        },
+        options: { 
+            responsive: true,
+            scales: { 
+                y: { 
+                    beginAtZero: true, 
+                    max: maxScore // Automatically adjusts based on highest data value
+                }
+            }
+        }
     });
 }
+
 
 function createPieChart(ctx, labels, data, title) {
     return new Chart(ctx, {
@@ -191,6 +245,7 @@ function generateChartColors(count, alpha) {
     const baseColors = [`rgba(54, 162, 235, ${alpha})`, `rgba(255, 206, 86, ${alpha})`, `rgba(75, 192, 192, ${alpha})`, `rgba(153, 102, 255, ${alpha})`, `rgba(255, 159, 64, ${alpha})`];
     return Array.from({ length: count }, (_, i) => baseColors[i % baseColors.length]);
 }
+
 async function exportToPDF() {
     const loadingIndicator = document.getElementById("pdf-loading");
     loadingIndicator.style.display = 'flex';
@@ -202,17 +257,15 @@ async function exportToPDF() {
         format: 'a4'
     });
 
-    // Generate a random alphanumeric exam number with uppercase letters and numbers
     const examNumber = generateExamNumber();
 
-    // Adjust header layout with additional spacing
     pdf.setFontSize(22);
     pdf.text('Big 5 Personality Test Report', 40, 40);
     pdf.setFontSize(12);
-    pdf.text(`Exam Number: ${examNumber}`, 40, 60); // Display Exam Number
+    pdf.text(`Exam Number: ${examNumber}`, 40, 60);
     pdf.text(`Generated on: ${new Date().toLocaleDateString()}`, 40, 80);
     pdf.setLineWidth(0.5);
-    pdf.line(40, 90, pdf.internal.pageSize.width - 40, 90); // Draw horizontal line below header
+    pdf.line(40, 90, pdf.internal.pageSize.width - 40, 90);
 
     async function addChartToPDF(chartId, title, yOffset = 110, maxWidth = 500) {
         const chartCanvas = document.getElementById(chartId);
@@ -225,7 +278,6 @@ async function exportToPDF() {
             setTimeout(() => {
                 const imgData = chartCanvas.toDataURL('image/png', 1.0);
 
-                // Calculate aspect ratio and adjust dimensions
                 const canvasWidth = chartCanvas.width;
                 const canvasHeight = chartCanvas.height;
                 const aspectRatio = canvasWidth / canvasHeight;
@@ -239,25 +291,24 @@ async function exportToPDF() {
                     displayWidth = maxHeight * aspectRatio;
                 }
 
-                // Center the chart horizontally on the page
                 const pageWidth = pdf.internal.pageSize.width;
                 const xOffset = (pageWidth - displayWidth) / 2;
 
                 pdf.setFontSize(16);
-                pdf.text(title, xOffset, yOffset); // Move title down slightly
-                pdf.addImage(imgData, 'PNG', xOffset, yOffset + 10, displayWidth, displayHeight); // Add chart below the title
-                resolve(yOffset + displayHeight + 40); // Leave space after each chart
+                pdf.text(title, xOffset, yOffset);
+                pdf.addImage(imgData, 'PNG', xOffset, yOffset + 10, displayWidth, displayHeight);
+                resolve(yOffset + displayHeight + 40);
             }, 100);
         });
     }
 
     try {
-        let yOffset = 110; // Adjusted starting offset for first chart
+        let yOffset = 110;
         yOffset = await addChartToPDF('barBig5Chart', 'Big 5 Traits - Bar Chart', yOffset);
-        pdf.addPage();  // New page for the next chart
+        pdf.addPage();
         yOffset = await addChartToPDF('barBig10Chart', 'Big 10 Clusters - Bar Chart', 110);
 
-        pdf.addPage();  // Separate pages for pie charts
+        pdf.addPage();
         yOffset = await addChartToPDF('pieBig5Chart', 'Big 5 Traits - Pie Chart', 110);
         pdf.addPage();
         await addChartToPDF('pieBig10Chart', 'Big 10 Clusters - Pie Chart', 110);
@@ -271,7 +322,6 @@ async function exportToPDF() {
     }
 }
 
-// Function to generate a 16-character alphanumeric exam number with uppercase letters and numbers
 function generateExamNumber() {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     let result = '';
@@ -281,17 +331,6 @@ function generateExamNumber() {
     return result;
 }
 
-// Function to generate a 16-character alphanumeric exam number
-function generateExamNumber() {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let result = '';
-    for (let i = 0; i < 16; i++) {
-        result += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return result;
-}
-
-// Toggle display of the scores section
 function toggleScores() {
     const scoreboard = document.getElementById("scoreboard");
     scoreboard.classList.toggle("show");
