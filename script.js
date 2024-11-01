@@ -1,5 +1,3 @@
-// script.js
-
 // Initialize question index, responses storage, and scores
 let currentQuestionIndex = 0;
 const responses = {}; // Stores responses by question index
@@ -43,10 +41,8 @@ function displayQuestion() {
     }
 
     const question = questions[currentQuestionIndex];
-    const totalQuestions = questions.length;
-
     document.getElementById("current-question-header").innerText =
-        `Question ${currentQuestionIndex + 1} of ${totalQuestions}`;
+        `Question ${currentQuestionIndex + 1} of ${questions.length}`;
     
     const questionTextElement = document.getElementById("question-text");
     questionTextElement.style.fontSize = "1.5em";
@@ -106,15 +102,12 @@ function prevQuestion() {
 function saveResponse() {
     const question = questions[currentQuestionIndex];
     
-    // Remove previous score if it exists to avoid double counting
     if (responses[currentQuestionIndex]) removePreviousScore();
 
     responses[currentQuestionIndex] = selectedResponse;
 
-    // Determine the scores to apply based on response (agree or disagree)
     const scoresToApply = selectedResponse >= 3 ? question.facet.agreeScores : question.facet.disagreeScores;
 
-    // Apply scores to the respective aspect
     for (const [aspect, value] of Object.entries(scoresToApply)) {
         if (scores[aspect] !== undefined) {
             scores[aspect] += value;
@@ -123,10 +116,8 @@ function saveResponse() {
         }
     }
 
-    // Update the Big 5 traits based on the sum of their respective aspects
     updateBig5Scores();
 
-    // Log the updated scores to the console for debugging
     console.log("Current Scores:", scores);
 }
 
@@ -140,11 +131,10 @@ function removePreviousScore() {
         }
         delete responses[currentQuestionIndex];
         updateScores();
-        logScores(); // Log scores to console after removing
+        logScores();
     }
 }
 
-// Display all scores in the console
 function logScores() {
     console.log("Current Scores:");
     for (const [trait, score] of Object.entries(scores)) {
@@ -233,16 +223,36 @@ function createBarChart(ctx, labels, data, title) {
     });
 }
 
-
 function createPieChart(ctx, labels, data, title) {
     return new Chart(ctx, {
         type: 'pie',
-        data: { labels, datasets: [{ data, backgroundColor: generateChartColors(labels.length, 0.7), borderWidth: 2 }] }
+        data: { 
+            labels, 
+            datasets: [{
+                data,
+                backgroundColor: generateChartColors(labels.length, 0.7),
+                borderWidth: 2 
+            }]
+        },
+        options: { 
+            responsive: true,
+            plugins: { 
+                legend: { 
+                    position: 'top' 
+                }
+            }
+        }
     });
 }
 
 function generateChartColors(count, alpha) {
-    const baseColors = [`rgba(54, 162, 235, ${alpha})`, `rgba(255, 206, 86, ${alpha})`, `rgba(75, 192, 192, ${alpha})`, `rgba(153, 102, 255, ${alpha})`, `rgba(255, 159, 64, ${alpha})`];
+    const baseColors = [
+        `rgba(54, 162, 235, ${alpha})`, 
+        `rgba(255, 206, 86, ${alpha})`, 
+        `rgba(75, 192, 192, ${alpha})`, 
+        `rgba(153, 102, 255, ${alpha})`, 
+        `rgba(255, 159, 64, ${alpha})`
+    ];
     return Array.from({ length: count }, (_, i) => baseColors[i % baseColors.length]);
 }
 
@@ -277,7 +287,6 @@ async function exportToPDF() {
         return new Promise((resolve) => {
             setTimeout(() => {
                 const imgData = chartCanvas.toDataURL('image/png', 1.0);
-
                 const canvasWidth = chartCanvas.width;
                 const canvasHeight = chartCanvas.height;
                 const aspectRatio = canvasWidth / canvasHeight;
@@ -336,3 +345,4 @@ function toggleScores() {
     scoreboard.classList.toggle("show");
     document.getElementById("toggle-button").innerText = scoreboard.classList.contains("show") ? "Hide Scores" : "Show Scores";
 }
+

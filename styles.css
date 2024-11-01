@@ -3,11 +3,11 @@
 
 /* Color Variables for Consistency */
 :root {
-    --primary-color: #4CAF50;           /* Green for headers, buttons */
-    --secondary-color: #333;            /* Dark grey for toggle button */
-    --background-color: #f9f9f9;        /* Light background */
-    --text-color: #333;                 /* Default text color */
-    --button-hover: #45a049;            /* Button hover color */
+    --primary-color: #4CAF50;
+    --secondary-color: #333;
+    --background-color: #f9f9f9;
+    --text-color: #333;
+    --button-hover: #45a049;
     --segment-strongly-disagree: #ff9999;
     --segment-disagree: #ffb3b3;
     --segment-neutral: #e6e6e6;
@@ -32,13 +32,13 @@ body {
 header {
     background-color: var(--primary-color);
     color: white;
-    padding: 1em 0; /* Vertical padding only */
+    padding: 1em 0;
     border-bottom: 2px solid var(--selected-border);
-    text-align: center; /* Center header text */
     width: 100%;
-    box-sizing: border-box;
     display: flex;
     justify-content: center;
+    text-align: center;
+    box-sizing: border-box;
 }
 
 /* Test Section Styling with Centered Content */
@@ -48,29 +48,27 @@ header {
     align-items: center;
     justify-content: center;
     margin-top: 2em;
-    text-align: center;
     width: 100%;
 }
 
+/* Question Container */
 #question-container {
     width: 80%;
     max-width: 600px;
-    margin: 1.5em auto; /* Center container and provide even vertical spacing */
-    text-align: center; /* Ensure inner content is centered */
+    margin: 1.5em auto;
+    text-align: center;
 }
 
 /* Progress Indicator Styling */
 .progress-indicator {
     font-size: 1.2em;
-    margin-bottom: 1em; /* Spacing below progress indicator */
-    text-align: center;
+    margin-bottom: 1em;
 }
 
 /* Main Question Text Styling */
 .question-text {
     font-size: 1.5em;
-    margin-bottom: 1.5em; /* Spacing below main question text */
-    text-align: center;
+    margin-bottom: 1.5em;
 }
 
 /* Likert Scale Styling */
@@ -79,14 +77,14 @@ header {
     align-items: center;
     justify-content: center;
     gap: 10px;
-    margin-bottom: 1.5em; /* Spacing below Likert scale */
+    margin-bottom: 1.5em;
     text-align: center;
 }
 
 /* Likert Scale Labels */
 .likert-bar label {
     font-weight: bold;
-    color: #333;
+    color: var(--text-color);
     margin: 0 10px;
 }
 
@@ -111,7 +109,7 @@ header {
     border: 1px solid var(--selected-border);
 }
 
-/* Centered Navigation Buttons */
+/* Navigation Buttons Styling */
 .navigation-buttons {
     display: flex;
     gap: 1em;
@@ -169,4 +167,38 @@ canvas#resultsChart {
     margin-top: 20px;
     max-width: 100%;
     height: auto;
+}
+
+/* Responsive Design Adjustments */
+@media (max-width: 768px) {
+    body {
+        font-size: 14px;
+    }
+    header {
+        padding: 0.8em;
+        font-size: 1.2em;
+    }
+    #toggle-button, button {
+        padding: 8px 15px;
+        font-size: 0.9em;
+    }
+    #scoreboard, #test-section, #final-report {
+        width: 90%;
+        padding: 10px;
+    }
+    .question-text {
+        font-size: 1.3em;
+    }
+    .bar-segment {
+        width: 40px;
+        height: 20px;
+    }
+    .navigation-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+    canvas#resultsChart {
+        width: 100% !important;
+        height: auto !important;
+    }
 }
