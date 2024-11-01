@@ -12,15 +12,23 @@
 <body>
     <!-- Usage Agreement Section -->
     <div id="usage-agreement" class="modal">
-        <h2>Usage Agreement</h2>
-        <p>Please accept the terms to proceed with the test.</p>
+        <h2>Software Usage Agreement</h2>
+        <p>
+            1. Acceptance of Agreement: By using this software, you agree to be bound by the terms of this Agreement. If you disagree, do not use the Software.
+            <br><br>2. License Grant: The Licensor grants a non-exclusive, non-transferable right to use the Software for personal or internal business purposes.
+            <br><br>3. Restrictions on Use: You agree not to copy, modify, reverse engineer, or transfer the Software without permission.
+            <br><br>4. Intellectual Property: Rights and interest in the Software remain with the Licensor.
+            <br><br>5. No Warranty: The Software is provided "as is" without any warranty.
+            <br><br>6. Limitation of Liability: The Licensor is not liable for any damages arising from the use of the Software.
+            <br><br>7. Termination: This Agreement terminates if terms are violated. All use of the Software must cease upon termination.
+            <br><br>8. Governing Law: This Agreement is governed by the laws of California, USA.
+        </p>
         <button onclick="acceptAgreement()">Accept</button>
     </div>
 
     <!-- Header for Scores -->
     <header id="score-header" style="display: none;">
         <h1>Big 5 Personality Test Progress</h1>
-        <!-- Toggle Button for Collapsing the Scores -->
         <button id="toggle-button" onclick="toggleScores()">Show Scores</button>
         
         <!-- Scoreboard with Big 5 and Big 10 Scores -->
@@ -57,12 +65,15 @@
         <div id="question-container">
             <h2 id="current-question-header">Question</h2>
             <p id="question-text"></p>
-            <div id="likert-scale">
-                <label><input type="radio" name="response" value="1"> Strongly Disagree</label>
-                <label><input type="radio" name="response" value="2"> Disagree</label>
-                <label><input type="radio" name="response" value="3"> Neutral</label>
-                <label><input type="radio" name="response" value="4"> Agree</label>
-                <label><input type="radio" name="response" value="5"> Strongly Agree</label>
+            <div id="likert-scale" class="likert-bar">
+                <!-- Likert scale segments with data-value attributes for responses -->
+                <label>Disagree</label>
+                <div class="bar-segment" data-value="1"></div>
+                <div class="bar-segment" data-value="2"></div>
+                <div class="bar-segment" data-value="3"></div>
+                <div class="bar-segment" data-value="4"></div>
+                <div class="bar-segment" data-value="5"></div>
+                <label>Agree</label>
             </div>
         </div>
         <button id="prev-btn" onclick="prevQuestion()">Previous</button>
@@ -76,7 +87,7 @@
         <button onclick="exportToPDF()">Export Report as PDF</button>
     </section>
 
-    <script src="questions_small.js" defer></script>
+    <script src="questions.js" defer></script>
     <script src="script.js" defer></script>
 </body>
 </html>

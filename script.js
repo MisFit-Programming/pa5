@@ -22,6 +22,9 @@ const scores = {
     Withdrawal: 0
 };
 
+// Variable to store selected response value
+let selectedResponse = null;
+
 // Show the main test section and load the first question
 function acceptAgreement() {
     document.getElementById("usage-agreement").style.display = "none";
@@ -37,19 +40,36 @@ function displayQuestion() {
     document.getElementById("current-question-header").innerText = 
         `Trait: ${question.trait} | Cluster: ${question.cluster} | Facet: ${question.facet}`;
 
-    // Preselect previously saved response if it exists
-    const previousResponse = responses[currentQuestionIndex];
-    if (previousResponse) {
-        document.querySelector(`input[name="response"][value="${previousResponse}"]`).checked = true;
-    } else {
-        document.querySelectorAll('input[name="response"]').forEach(input => input.checked = false);
-    }
+    // Clear the previously selected response
+    selectedResponse = responses[currentQuestionIndex] || null;
+    updateLikertSelection();
+
+    // Re-bind event listeners for the Likert scale segments
+    document.querySelectorAll('.bar-segment').forEach(segment => {
+        segment.removeEventListener('click', handleLikertClick); // Remove existing listeners to avoid duplicates
+        segment.addEventListener('click', handleLikertClick);
+    });
+}
+
+// Handle click events for the Likert scale segments
+function handleLikertClick(event) {
+    selectedResponse = parseInt(event.target.getAttribute('data-value'));
+    updateLikertSelection();
+}
+
+// Highlight the selected segment on the Likert scale
+function updateLikertSelection() {
+    document.querySelectorAll('.bar-segment').forEach(segment => {
+        segment.classList.remove('selected');
+        if (selectedResponse && segment.getAttribute('data-value') === selectedResponse.toString()) {
+            segment.classList.add('selected');
+        }
+    });
 }
 
 // Move to the next question, ensuring a response has been selected
 function nextQuestion() {
-    const response = document.querySelector('input[name="response"]:checked');
-    if (!response) {
+    if (selectedResponse === null) {
         alert("Please select an answer before proceeding to the next question.");
         return; // Stop if no response is selected
     }
@@ -75,9 +95,8 @@ function prevQuestion() {
 
 // Save the response and update scores
 function saveResponse() {
-    const response = document.querySelector('input[name="response"]:checked');
-    if (response) {
-        const scoreValue = parseInt(response.value);
+    if (selectedResponse !== null) {
+        const scoreValue = selectedResponse;
         const question = questions[currentQuestionIndex];
         
         // If there was a previous response, remove its points
