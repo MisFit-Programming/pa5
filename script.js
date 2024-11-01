@@ -1,143 +1,139 @@
-let currentQuestionIndex = 0;
-const responses = {}; // Store responses by question index
+// script.js
 
-// Initialize Scores
+// Initialize question index, responses storage, and scores
+let currentQuestionIndex = 0;
+const responses = {}; // Stores responses by question index
+
 const scores = {
-    // Big 5 Traits
-    Openness: 0,
-    Conscientiousness: 0,
-    Extraversion: 0,
-    Agreeableness: 0,
-    Neuroticism: 0,
-    // Big 10 Clusters
-    Intellect: 0,
-    Receptivity: 0,
-    Industriousness: 0,
-    Orderliness: 0,
-    Enthusiasm: 0,
-    Assertiveness: 0,
-    Compassion: 0,
-    Politeness: 0,
-    Volatility: 0,
-    Withdrawal: 0
+    Openness: 0, Conscientiousness: 0, Extraversion: 0, Agreeableness: 0, Neuroticism: 0,
+    Intellect: 0, Receptivity: 0, Industriousness: 0, Orderliness: 0, Enthusiasm: 0,
+    Assertiveness: 0, Compassion: 0, Politeness: 0, Volatility: 0, Withdrawal: 0
 };
 
-// Variable to store selected response value
-let selectedResponse = null;
+// Chart instances
+let barBig5ChartInstance = null;
+let barBig10ChartInstance = null;
+let pieBig5ChartInstance = null;
+let pieBig10ChartInstance = null;
 
-// Show the main test section and load the first question
+document.addEventListener('DOMContentLoaded', initializeApp);
+
+function initializeApp() {
+    if (!questions || !Array.isArray(questions) || questions.length === 0) {
+        console.error("Questions are not defined or empty.");
+        alert("Failed to load questions. Please reload the page.");
+        return;
+    }
+    document.getElementById("usage-agreement").style.display = "flex";
+}
+
+// Accept agreement and display the first question
 function acceptAgreement() {
     document.getElementById("usage-agreement").style.display = "none";
     document.getElementById("test-section").style.display = "block";
-    document.getElementById("score-header").style.display = "block";
+    document.getElementById("score-header").style.display = "flex";
     displayQuestion();
 }
 
-// Display the current question and header
+// Display the current question
 function displayQuestion() {
-    const question = questions[currentQuestionIndex];
-    document.getElementById("question-text").innerText = question.question;
-    document.getElementById("current-question-header").innerText = 
-        `Trait: ${question.trait} | Cluster: ${question.cluster} | Facet: ${question.facet}`;
+    if (currentQuestionIndex >= questions.length) {
+        showFinalReport();
+        return;
+    }
 
-    // Clear the previously selected response
+    const question = questions[currentQuestionIndex];
+    const totalQuestions = questions.length;
+
+    // Update progress indicator to show "Question X of Y"
+    document.getElementById("current-question-header").innerText =
+        `Question ${currentQuestionIndex + 1} of ${totalQuestions}`;
+
+    // Display the main question text with a larger font size
+    const questionTextElement = document.getElementById("question-text");
+    questionTextElement.style.fontSize = "1.5em"; // Set larger font size for main question text
+    questionTextElement.innerText = question.question;
+
     selectedResponse = responses[currentQuestionIndex] || null;
     updateLikertSelection();
+    setupLikertListeners();
+}
 
-    // Re-bind event listeners for the Likert scale segments
-    document.querySelectorAll('.bar-segment').forEach(segment => {
-        segment.removeEventListener('click', handleLikertClick); // Remove existing listeners to avoid duplicates
+
+function setupLikertListeners() {
+    const segments = document.querySelectorAll('.bar-segment');
+    segments.forEach(segment => {
+        segment.removeEventListener('click', handleLikertClick);
+        segment.removeEventListener('keydown', handleBarSegmentKeydown);
         segment.addEventListener('click', handleLikertClick);
+        segment.addEventListener('keydown', handleBarSegmentKeydown);
     });
 }
 
-// Handle click events for the Likert scale segments
 function handleLikertClick(event) {
     selectedResponse = parseInt(event.target.getAttribute('data-value'));
     updateLikertSelection();
 }
 
-// Highlight the selected segment on the Likert scale
+function handleBarSegmentKeydown(event) {
+    if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        event.target.click();
+    }
+}
+
 function updateLikertSelection() {
     document.querySelectorAll('.bar-segment').forEach(segment => {
-        segment.classList.remove('selected');
-        if (selectedResponse && segment.getAttribute('data-value') === selectedResponse.toString()) {
-            segment.classList.add('selected');
-        }
+        segment.classList.toggle('selected', segment.getAttribute('data-value') === selectedResponse?.toString());
     });
 }
 
-// Move to the next question, ensuring a response has been selected
 function nextQuestion() {
     if (selectedResponse === null) {
-        alert("Please select an answer before proceeding to the next question.");
-        return; // Stop if no response is selected
+        alert("Please select an answer before proceeding.");
+        return;
     }
-
     saveResponse();
-    if (currentQuestionIndex < questions.length - 1) {
-        currentQuestionIndex++;
-        displayQuestion();
-    } else {
-        alert("Test complete! Thank you for participating.");
-        showFinalReport();
-    }
+    currentQuestionIndex < questions.length - 1 ? currentQuestionIndex++ : showFinalReport();
+    displayQuestion();
 }
 
-// Move to the previous question and adjust scores by removing the previous response
 function prevQuestion() {
     if (currentQuestionIndex > 0) {
-        removePreviousScore(); // Remove the current question's score before going back
+        removePreviousScore();
         currentQuestionIndex--;
         displayQuestion();
     }
 }
 
-// Save the response and update scores
 function saveResponse() {
-    if (selectedResponse !== null) {
-        const scoreValue = selectedResponse;
-        const question = questions[currentQuestionIndex];
-        
-        // If there was a previous response, remove its points
-        if (responses[currentQuestionIndex]) {
-            removePreviousScore();
-        }
+    const scoreValue = selectedResponse;
+    const question = questions[currentQuestionIndex];
+    if (responses[currentQuestionIndex]) removePreviousScore();
 
-        // Save response and update scores
-        responses[currentQuestionIndex] = scoreValue;
-        scores[question.trait] += scoreValue;    // Big 5 score update
-        scores[question.cluster] += scoreValue;  // Big 10 score update
-        
-        updateScores();
-    }
+    responses[currentQuestionIndex] = scoreValue;
+    scores[question.trait] += scoreValue;
+    scores[question.cluster] += scoreValue;
+    updateScores();
 }
 
-// Remove the points of the previous response for the current question
 function removePreviousScore() {
     const previousScore = responses[currentQuestionIndex];
     if (previousScore) {
         const question = questions[currentQuestionIndex];
-        scores[question.trait] -= previousScore;    // Big 5 score update
-        scores[question.cluster] -= previousScore;  // Big 10 score update
-
-        // Remove saved response for the current question
+        scores[question.trait] -= previousScore;
+        scores[question.cluster] -= previousScore;
         delete responses[currentQuestionIndex];
-
         updateScores();
     }
 }
 
-// Update displayed scores in the header
 function updateScores() {
-    // Big 5 Trait Scores
     document.getElementById("openness-score").innerText = scores.Openness;
     document.getElementById("conscientiousness-score").innerText = scores.Conscientiousness;
     document.getElementById("extraversion-score").innerText = scores.Extraversion;
     document.getElementById("agreeableness-score").innerText = scores.Agreeableness;
     document.getElementById("neuroticism-score").innerText = scores.Neuroticism;
-
-    // Big 10 Cluster Scores
     document.getElementById("intellect-score").innerText = scores.Intellect;
     document.getElementById("receptivity-score").innerText = scores.Receptivity;
     document.getElementById("industriousness-score").innerText = scores.Industriousness;
@@ -150,78 +146,154 @@ function updateScores() {
     document.getElementById("withdrawal-score").innerText = scores.Withdrawal;
 }
 
-// Show the final report with a chart and PDF export option
 function showFinalReport() {
+    document.getElementById("test-section").style.display = "none";
+    document.getElementById("score-header").style.display = "none";
     document.getElementById("final-report").style.display = "block";
-    renderChart();
+    renderAllCharts();
 }
 
-// Render a bar chart with Chart.js for the Big 5 and Big 10 scores
-function renderChart() {
-    const ctx = document.getElementById("resultsChart").getContext("2d");
+function renderAllCharts() {
+    const barBig5Ctx = document.getElementById("barBig5Chart").getContext("2d", { willReadFrequently: true });
+    const barBig10Ctx = document.getElementById("barBig10Chart").getContext("2d", { willReadFrequently: true });
+    const pieBig5Ctx = document.getElementById("pieBig5Chart").getContext("2d", { willReadFrequently: true });
+    const pieBig10Ctx = document.getElementById("pieBig10Chart").getContext("2d", { willReadFrequently: true });
 
-    // Data for Big 5 and Big 10 scores
-    const labels = ["Openness", "Conscientiousness", "Extraversion", "Agreeableness", "Neuroticism",
-                    "Intellect", "Receptivity", "Industriousness", "Orderliness", "Enthusiasm",
-                    "Assertiveness", "Compassion", "Politeness", "Volatility", "Withdrawal"];
-    const data = [
-        scores.Openness, scores.Conscientiousness, scores.Extraversion, scores.Agreeableness, scores.Neuroticism,
-        scores.Intellect, scores.Receptivity, scores.Industriousness, scores.Orderliness, scores.Enthusiasm,
-        scores.Assertiveness, scores.Compassion, scores.Politeness, scores.Volatility, scores.Withdrawal
-    ];
+    const big5Traits = ["Openness", "Conscientiousness", "Extraversion", "Agreeableness", "Neuroticism"];
+    const big10Clusters = ["Intellect", "Receptivity", "Industriousness", "Orderliness", "Enthusiasm", "Assertiveness", "Compassion", "Politeness", "Volatility", "Withdrawal"];
+    const barBig5Data = big5Traits.map(trait => scores[trait]);
+    const barBig10Data = big10Clusters.map(cluster => scores[cluster]);
 
-    // Destroy previous chart instance if it exists
-    if (window.resultsChart) {
-        window.resultsChart.destroy();
-    }
+    [barBig5ChartInstance, barBig10ChartInstance, pieBig5ChartInstance, pieBig10ChartInstance].forEach(chart => chart?.destroy());
 
-    window.resultsChart = new Chart(ctx, {
-        type: "bar",
-        data: {
-            labels: labels,
-            datasets: [{
-                label: "Personality Scores",
-                data: data,
-                backgroundColor: "rgba(75, 192, 192, 0.2)",
-                borderColor: "rgba(75, 192, 192, 1)",
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    max: 25 // Adjust as needed based on your scoring range
-                }
-            }
-        }
+    barBig5ChartInstance = createBarChart(barBig5Ctx, big5Traits, barBig5Data, 'Big 5 Traits Scores');
+    barBig10ChartInstance = createBarChart(barBig10Ctx, big10Clusters, barBig10Data, 'Big 10 Clusters Scores');
+    pieBig5ChartInstance = createPieChart(pieBig5Ctx, big5Traits, barBig5Data, 'Big 5 Traits Distribution');
+    pieBig10ChartInstance = createPieChart(pieBig10Ctx, big10Clusters, barBig10Data, 'Big 10 Clusters Distribution');
+}
+
+function createBarChart(ctx, labels, data, title) {
+    return new Chart(ctx, {
+        type: 'bar',
+        data: { labels, datasets: [{ label: title, data, backgroundColor: generateChartColors(labels.length, 0.6), borderWidth: 1 }] },
+        options: { scales: { y: { beginAtZero: true, max: 25 } } }
     });
 }
 
-// Export the chart as a PDF
-function exportToPDF() {
-    const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF();
-
-    pdf.text("Personality Test Results", 10, 10);
-    pdf.text("Big 5 and Big 10 Scores", 10, 20);
-
-    // Convert chart to image and add to PDF
-    pdf.addImage(window.resultsChart.toBase64Image(), "PNG", 10, 30, 180, 160);
-    pdf.save("Personality_Test_Report.pdf");
+function createPieChart(ctx, labels, data, title) {
+    return new Chart(ctx, {
+        type: 'pie',
+        data: { labels, datasets: [{ data, backgroundColor: generateChartColors(labels.length, 0.7), borderWidth: 2 }] }
+    });
 }
 
-// Function to toggle the display of the scores section with a smooth transition
+function generateChartColors(count, alpha) {
+    const baseColors = [`rgba(54, 162, 235, ${alpha})`, `rgba(255, 206, 86, ${alpha})`, `rgba(75, 192, 192, ${alpha})`, `rgba(153, 102, 255, ${alpha})`, `rgba(255, 159, 64, ${alpha})`];
+    return Array.from({ length: count }, (_, i) => baseColors[i % baseColors.length]);
+}
+async function exportToPDF() {
+    const loadingIndicator = document.getElementById("pdf-loading");
+    loadingIndicator.style.display = 'flex';
+
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'pt',
+        format: 'a4'
+    });
+
+    // Generate a random alphanumeric exam number with uppercase letters and numbers
+    const examNumber = generateExamNumber();
+
+    // Adjust header layout with additional spacing
+    pdf.setFontSize(22);
+    pdf.text('Big 5 Personality Test Report', 40, 40);
+    pdf.setFontSize(12);
+    pdf.text(`Exam Number: ${examNumber}`, 40, 60); // Display Exam Number
+    pdf.text(`Generated on: ${new Date().toLocaleDateString()}`, 40, 80);
+    pdf.setLineWidth(0.5);
+    pdf.line(40, 90, pdf.internal.pageSize.width - 40, 90); // Draw horizontal line below header
+
+    async function addChartToPDF(chartId, title, yOffset = 110, maxWidth = 500) {
+        const chartCanvas = document.getElementById(chartId);
+        if (!chartCanvas) {
+            console.warn(`Chart with ID ${chartId} not found.`);
+            return;
+        }
+
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                const imgData = chartCanvas.toDataURL('image/png', 1.0);
+
+                // Calculate aspect ratio and adjust dimensions
+                const canvasWidth = chartCanvas.width;
+                const canvasHeight = chartCanvas.height;
+                const aspectRatio = canvasWidth / canvasHeight;
+
+                let displayWidth = maxWidth;
+                let displayHeight = maxWidth / aspectRatio;
+
+                const maxHeight = 400;
+                if (displayHeight > maxHeight) {
+                    displayHeight = maxHeight;
+                    displayWidth = maxHeight * aspectRatio;
+                }
+
+                // Center the chart horizontally on the page
+                const pageWidth = pdf.internal.pageSize.width;
+                const xOffset = (pageWidth - displayWidth) / 2;
+
+                pdf.setFontSize(16);
+                pdf.text(title, xOffset, yOffset); // Move title down slightly
+                pdf.addImage(imgData, 'PNG', xOffset, yOffset + 10, displayWidth, displayHeight); // Add chart below the title
+                resolve(yOffset + displayHeight + 40); // Leave space after each chart
+            }, 100);
+        });
+    }
+
+    try {
+        let yOffset = 110; // Adjusted starting offset for first chart
+        yOffset = await addChartToPDF('barBig5Chart', 'Big 5 Traits - Bar Chart', yOffset);
+        pdf.addPage();  // New page for the next chart
+        yOffset = await addChartToPDF('barBig10Chart', 'Big 10 Clusters - Bar Chart', 110);
+
+        pdf.addPage();  // Separate pages for pie charts
+        yOffset = await addChartToPDF('pieBig5Chart', 'Big 5 Traits - Pie Chart', 110);
+        pdf.addPage();
+        await addChartToPDF('pieBig10Chart', 'Big 10 Clusters - Pie Chart', 110);
+
+        pdf.save(`Personality_Test_Report_${examNumber}.pdf`);
+    } catch (error) {
+        console.error("Error generating PDF:", error);
+        alert("An error occurred while generating the PDF.");
+    } finally {
+        loadingIndicator.style.display = 'none';
+    }
+}
+
+// Function to generate a 16-character alphanumeric exam number with uppercase letters and numbers
+function generateExamNumber() {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let result = '';
+    for (let i = 0; i < 16; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
+}
+
+// Function to generate a 16-character alphanumeric exam number
+function generateExamNumber() {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < 16; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
+}
+
+// Toggle display of the scores section
 function toggleScores() {
     const scoreboard = document.getElementById("scoreboard");
-    const toggleButton = document.getElementById("toggle-button");
-
-    if (scoreboard.classList.contains("show")) {
-        scoreboard.classList.remove("show");
-        toggleButton.innerText = "Show Scores";
-    } else {
-        scoreboard.classList.add("show");
-        toggleButton.innerText = "Hide Scores";
-    }
+    scoreboard.classList.toggle("show");
+    document.getElementById("toggle-button").innerText = scoreboard.classList.contains("show") ? "Hide Scores" : "Show Scores";
 }

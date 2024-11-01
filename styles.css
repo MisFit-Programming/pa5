@@ -1,72 +1,137 @@
-/* General Styling */
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+/* Color Variables for Consistency */
+:root {
+    --primary-color: #4CAF50;           /* Green for headers, buttons */
+    --secondary-color: #333;            /* Dark grey for toggle button */
+    --background-color: #f9f9f9;        /* Light background */
+    --text-color: #333;                 /* Default text color */
+    --button-hover: #45a049;            /* Button hover color */
+    --segment-strongly-disagree: #ff9999;
+    --segment-disagree: #ffb3b3;
+    --segment-neutral: #e6e6e6;
+    --segment-agree: #b3d9b3;
+    --segment-strongly-agree: #99cc99;
+    --highlight-color: #6DBE45;
+    --selected-border: #388E3C;
+}
+
+/* General Styles */
 body {
-    font-family: Arial, sans-serif;
-    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
     margin: 0;
     padding: 0;
-    background-color: #f9f9f9;
+    line-height: 1.6;
+    text-align: center;
 }
 
 /* Header Styling */
 header {
-    background-color: #4CAF50;
+    background-color: var(--primary-color);
     color: white;
-    padding: 1em;
-    text-align: center;
-    border-bottom: 2px solid #388E3C;
+    padding: 1em 0; /* Vertical padding only */
+    border-bottom: 2px solid var(--selected-border);
+    text-align: center; /* Center header text */
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
 }
 
-/* Toggle Button Styling */
-#toggle-button {
-    background-color: #333;
-    color: white;
-    border: none;
-    padding: 0.5em 1em;
-    font-size: 1em;
+/* Test Section Styling with Centered Content */
+#test-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2em;
+    text-align: center;
+    width: 100%;
+}
+
+#question-container {
+    width: 80%;
+    max-width: 600px;
+    margin: 1.5em auto; /* Center container and provide even vertical spacing */
+    text-align: center; /* Ensure inner content is centered */
+}
+
+/* Progress Indicator Styling */
+.progress-indicator {
+    font-size: 1.2em;
+    margin-bottom: 1em; /* Spacing below progress indicator */
+    text-align: center;
+}
+
+/* Main Question Text Styling */
+.question-text {
+    font-size: 1.5em;
+    margin-bottom: 1.5em; /* Spacing below main question text */
+    text-align: center;
+}
+
+/* Likert Scale Styling */
+.likert-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 1.5em; /* Spacing below Likert scale */
+    text-align: center;
+}
+
+/* Likert Scale Labels */
+.likert-bar label {
+    font-weight: bold;
+    color: #333;
+    margin: 0 10px;
+}
+
+/* Likert Scale Segments */
+.bar-segment {
+    width: 50px;
+    height: 25px;
     cursor: pointer;
-    margin: 0.5em 0;
     border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.bar-segment[data-value="1"] { background-color: var(--segment-strongly-disagree); }
+.bar-segment[data-value="2"] { background-color: var(--segment-disagree); }
+.bar-segment[data-value="3"] { background-color: var(--segment-neutral); }
+.bar-segment[data-value="4"] { background-color: var(--segment-agree); }
+.bar-segment[data-value="5"] { background-color: var(--segment-strongly-agree); }
+
+.bar-segment:hover,
+.bar-segment.selected {
+    background-color: var(--highlight-color);
+    border: 1px solid var(--selected-border);
+}
+
+/* Centered Navigation Buttons */
+.navigation-buttons {
+    display: flex;
+    gap: 1em;
+    justify-content: center;
+}
+
+/* Button Styling */
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--primary-color);
+    color: white;
     transition: background-color 0.3s ease;
 }
 
-#toggle-button:hover {
-    background-color: #555;
-}
-
-/* Scoreboard Section with Collapsible Effect */
-#scoreboard {
-    display: flex;
-    justify-content: space-between;
-    padding: 0.5em;
-    background-color: #f4f4f4;
-    color: #333;
-    overflow: hidden;
-    max-height: 0; /* Start hidden with max-height set to 0 */
-    transition: max-height 0.3s ease-out, padding 0.3s ease-out; /* Smooth transition */
-}
-
-#scoreboard.show {
-    max-height: 1000px; /* Set a high max-height to reveal the content */
-    padding: 0.5em; /* Padding only applies when expanded */
-}
-
-/* Big 5 and Big 10 Scores Styling */
-#big5-scores, #big10-scores {
-    flex: 1;
-    padding: 0.5em;
-    font-size: 0.9em;
-    line-height: 1.5;
-    text-align: left;
-}
-
-#big5-scores h3, #big10-scores h3 {
-    margin: 0 0 0.5em;
-    font-size: 1em;
-    font-weight: bold;
-}
-
-#big5-scores p, #big10-scores p {
-    margin: 0.2em 0;
+button:hover {
+    background-color: var(--button-hover);
 }
 
 /* Modal Styling */
@@ -74,6 +139,7 @@ header {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     position: fixed;
     top: 0;
     left: 0;
@@ -83,74 +149,14 @@ header {
     color: white;
     padding: 2em;
     text-align: center;
-    z-index: 1000; /* Ensure modal is on top */
+    z-index: 1000;
 }
 
-/* Question Container Styling */
-#question-container {
-    margin-top: 2em;
-}
-
-/* Horizontal Likert Scale Styling */
-#likert-scale {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 1em;
-}
-
-#likert-scale label {
-    font-weight: bold;
-    color: #333;
-    margin: 0 10px;
-}
-
-/* Styling for Likert bar segments */
-.bar-segment {
-    width: 50px; /* Slightly wider for better accessibility */
-    height: 25px;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: background-color 0.3s;
-}
-
-/* Different colors for each segment */
-.bar-segment[data-value="1"] { background-color: #ff9999; } /* Strongly Disagree */
-.bar-segment[data-value="2"] { background-color: #ffb3b3; } /* Disagree */
-.bar-segment[data-value="3"] { background-color: #e6e6e6; } /* Neutral */
-.bar-segment[data-value="4"] { background-color: #b3d9b3; } /* Agree */
-.bar-segment[data-value="5"] { background-color: #99cc99; } /* Strongly Agree */
-
-/* Highlight for hover and selected segment */
-.bar-segment:hover,
-.bar-segment.selected {
-    background-color: #6DBE45; /* Highlight color for selected or hovered segment */
-    border: 1px solid #388E3C; /* Slight border to indicate selection */
-}
-
-/* General Button Styling */
-button {
-    padding: 10px 20px;
-    margin: 10px;
-    font-size: 16px;
-    cursor: pointer;
-    border: none;
-    border-radius: 5px;
-    background-color: #4CAF50;
-    color: white;
-    transition: background-color 0.3s ease;
-}
-
-button:hover {
-    background-color: #45a049;
-}
-
-/* Final Report Section Styling */
+/* Final Report Styling */
 #final-report {
     text-align: center;
     padding: 2em;
-    background-color: #ffffff;
+    background-color: white;
     margin: 1em auto;
     width: 90%;
     max-width: 600px;
@@ -158,6 +164,7 @@ button:hover {
     border-radius: 8px;
 }
 
+/* Canvas Chart Styling */
 canvas#resultsChart {
     margin-top: 20px;
     max-width: 100%;

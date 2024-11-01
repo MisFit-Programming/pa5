@@ -2,91 +2,105 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Big 5 Personality Test</title>
     <link rel="stylesheet" href="styles.css">
-    <!-- Links for Chart.js and jsPDF -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 </head>
 <body>
-    <!-- Usage Agreement Section -->
-    <div id="usage-agreement" class="modal">
-        <h2>Software Usage Agreement</h2>
-        <p>
-            1. Acceptance of Agreement: By using this software, you agree to be bound by the terms of this Agreement. If you disagree, do not use the Software.
-            <br><br>2. License Grant: The Licensor grants a non-exclusive, non-transferable right to use the Software for personal or internal business purposes.
-            <br><br>3. Restrictions on Use: You agree not to copy, modify, reverse engineer, or transfer the Software without permission.
-            <br><br>4. Intellectual Property: Rights and interest in the Software remain with the Licensor.
-            <br><br>5. No Warranty: The Software is provided "as is" without any warranty.
-            <br><br>6. Limitation of Liability: The Licensor is not liable for any damages arising from the use of the Software.
-            <br><br>7. Termination: This Agreement terminates if terms are violated. All use of the Software must cease upon termination.
-            <br><br>8. Governing Law: This Agreement is governed by the laws of California, USA.
-        </p>
-        <button onclick="acceptAgreement()">Accept</button>
+    <!-- Usage Agreement Modal -->
+    <div id="usage-agreement" class="modal" role="dialog" aria-live="polite">
+        <h2>Usage Agreement</h2>
+        <p>Welcome to the Big 5 Personality Test. By proceeding, you agree to our terms and conditions...</p>
+        <button class="button" onclick="acceptAgreement()">Accept</button>
     </div>
 
-    <!-- Header for Scores -->
+    <!-- Score Header -->
     <header id="score-header" style="display: none;">
         <h1>Big 5 Personality Test Progress</h1>
-        <button id="toggle-button" onclick="toggleScores()">Show Scores</button>
-        
-        <!-- Scoreboard with Big 5 and Big 10 Scores -->
-        <div id="scoreboard" class="collapsible">
-            <!-- Big 5 Trait Scores -->
-            <div id="big5-scores">
-                <h3>Big 5 Scores</h3>
-                <p><strong>Openness</strong>: <span id="openness-score">0</span></p>
-                <p><strong>Conscientiousness</strong>: <span id="conscientiousness-score">0</span></p>
-                <p><strong>Extraversion</strong>: <span id="extraversion-score">0</span></p>
-                <p><strong>Agreeableness</strong>: <span id="agreeableness-score">0</span></p>
-                <p><strong>Neuroticism</strong>: <span id="neuroticism-score">0</span></p>
-            </div>
-
-            <!-- Big 10 Facet Scores -->
-            <div id="big10-scores">
-                <h3>Big 10 Facet Scores</h3>
-                <p><strong>Intellect</strong>: <span id="intellect-score">0</span></p>
-                <p><strong>Receptivity</strong>: <span id="receptivity-score">0</span></p>
-                <p><strong>Industriousness</strong>: <span id="industriousness-score">0</span></p>
-                <p><strong>Orderliness</strong>: <span id="orderliness-score">0</span></p>
-                <p><strong>Enthusiasm</strong>: <span id="enthusiasm-score">0</span></p>
-                <p><strong>Assertiveness</strong>: <span id="assertiveness-score">0</span></p>
-                <p><strong>Compassion</strong>: <span id="compassion-score">0</span></p>
-                <p><strong>Politeness</strong>: <span id="politeness-score">0</span></p>
-                <p><strong>Volatility</strong>: <span id="volatility-score">0</span></p>
-                <p><strong>Withdrawal</strong>: <span id="withdrawal-score">0</span></p>
-            </div>
-        </div>
     </header>
 
-    <!-- Main Test Section -->
-    <main id="test-section" style="display: none;">
-        <div id="question-container">
-            <h2 id="current-question-header">Question</h2>
-            <p id="question-text"></p>
-            <div id="likert-scale" class="likert-bar">
-                <!-- Likert scale segments with data-value attributes for responses -->
-                <label>Disagree</label>
-                <div class="bar-segment" data-value="1"></div>
-                <div class="bar-segment" data-value="2"></div>
-                <div class="bar-segment" data-value="3"></div>
-                <div class="bar-segment" data-value="4"></div>
-                <div class="bar-segment" data-value="5"></div>
-                <label>Agree</label>
-            </div>
+    <!-- Scoreboard -->
+    <div id="scoreboard" style="display: none;">
+        <div class="score-section">
+            <h3>Big 5 Traits</h3>
+            <p><strong>Openness:</strong> <span id="openness-score">0</span></p>
+            <p><strong>Conscientiousness:</strong> <span id="conscientiousness-score">0</span></p>
+            <p><strong>Extraversion:</strong> <span id="extraversion-score">0</span></p>
+            <p><strong>Agreeableness:</strong> <span id="agreeableness-score">0</span></p>
+            <p><strong>Neuroticism:</strong> <span id="neuroticism-score">0</span></p>
         </div>
-        <button id="prev-btn" onclick="prevQuestion()">Previous</button>
-        <button id="next-btn" onclick="nextQuestion()">Next</button>
-    </main>
+        <div class="score-section">
+            <h3>Big 10 Clusters</h3>
+            <p><strong>Intellect:</strong> <span id="intellect-score">0</span></p>
+            <p><strong>Receptivity:</strong> <span id="receptivity-score">0</span></p>
+            <p><strong>Industriousness:</strong> <span id="industriousness-score">0</span></p>
+            <p><strong>Orderliness:</strong> <span id="orderliness-score">0</span></p>
+            <p><strong>Enthusiasm:</strong> <span id="enthusiasm-score">0</span></p>
+            <p><strong>Assertiveness:</strong> <span id="assertiveness-score">0</span></p>
+            <p><strong>Compassion:</strong> <span id="compassion-score">0</span></p>
+            <p><strong>Politeness:</strong> <span id="politeness-score">0</span></p>
+            <p><strong>Volatility:</strong> <span id="volatility-score">0</span></p>
+            <p><strong>Withdrawal:</strong> <span id="withdrawal-score">0</span></p>
+        </div>
+    </div>
+
+    <main id="test-section" style="display: none;">
+    <div id="question-container">
+        <h2 id="current-question-header"></h2> <!-- Progress indicator (Question X of Y) -->
+        <p id="question-text"></p> <!-- Main question text with larger font -->
+        <div id="likert-scale" class="likert-bar">
+            <label for="likert-1">Disagree</label>
+            <div class="bar-segment" data-value="1" tabindex="0" aria-label="Strongly Disagree"></div>
+            <div class="bar-segment" data-value="2" tabindex="0" aria-label="Disagree"></div>
+            <div class="bar-segment" data-value="3" tabindex="0" aria-label="Neutral"></div>
+            <div class="bar-segment" data-value="4" tabindex="0" aria-label="Agree"></div>
+            <div class="bar-segment" data-value="5" tabindex="0" aria-label="Strongly Agree"></div>
+            <label for="likert-5">Agree</label>
+        </div>
+    </div>
+    <div class="navigation-buttons">
+        <button class="button" id="prev-btn" onclick="prevQuestion()">Previous</button>
+        <button class="button" id="next-btn" onclick="nextQuestion()">Next</button>
+    </div>
+</main>
+
+
 
     <!-- Final Report Section -->
-    <section id="final-report" style="display: none; text-align: center;">
+    <section id="final-report" style="display: none;">
         <h2>Final Report</h2>
-        <canvas id="resultsChart" width="400" height="400"></canvas>
-        <button onclick="exportToPDF()">Export Report as PDF</button>
+        <div class="charts-container">
+            <div class="chart">
+                <h3>Big 5 Traits - Bar Chart</h3>
+                <canvas id="barBig5Chart"></canvas>
+            </div>
+            <div class="chart">
+                <h3>Big 10 Clusters - Bar Chart</h3>
+                <canvas id="barBig10Chart"></canvas>
+            </div>
+            <div class="chart">
+                <h3>Big 5 Traits - Pie Chart</h3>
+                <canvas id="pieBig5Chart"></canvas>
+            </div>
+            <div class="chart">
+                <h3>Big 10 Clusters - Pie Chart</h3>
+                <canvas id="pieBig10Chart"></canvas>
+            </div>
+        </div>
+        <button class="button" onclick="exportToPDF()">Export Report as PDF</button>
+        <!-- Loading Indicator -->
+        <div id="pdf-loading" class="loading-indicator" role="alert" aria-live="assertive" style="display: none;">
+            <div class="spinner"></div>
+            <p>Generating PDF, please wait...</p>
+        </div>
     </section>
 
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script src="questions.js" defer></script>
     <script src="script.js" defer></script>
 </body>
