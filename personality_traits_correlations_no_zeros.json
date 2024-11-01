@@ -1,0 +1,506 @@
+[
+    {
+        "Trait": "Openness",
+        "Unnamed: 1": "Intellect",
+        "Facet": "Quickness",
+        "Intellect": 0.86,
+        "Receptivity": 0.38
+    },
+    {
+        "Trait": "Openness",
+        "Unnamed: 1": "Intellect",
+        "Facet": "Creativity",
+        "Intellect": 0.85,
+        "Receptivity": 0.48
+    },
+    {
+        "Trait": "Openness",
+        "Unnamed: 1": "Intellect",
+        "Facet": "Expertise",
+        "Intellect": 0.81,
+        "Receptivity": 0.57
+    },
+    {
+        "Trait": "Openness",
+        "Unnamed: 1": "Intellect",
+        "Facet": "Inquisitiveness",
+        "Intellect": 0.76,
+        "Receptivity": 0.57
+    },
+    {
+        "Trait": "Openness",
+        "Unnamed: 1": "Intellect",
+        "Facet": "Ingenuity",
+        "Intellect": 0.73,
+        "Receptivity": 0.45
+    },
+    {
+        "Trait": "Openness",
+        "Unnamed: 1": "Intellect",
+        "Facet": "Capability",
+        "Intellect": 0.71,
+        "Receptivity": 0.2
+    },
+    {
+        "Trait": "Openness",
+        "Unnamed: 1": "Intellect",
+        "Facet": "Introspection",
+        "Intellect": 0.41,
+        "Receptivity": 0.32
+    },
+    {
+        "Trait": "Openness",
+        "Unnamed: 1": "Intellect",
+        "Facet": "Depth",
+        "Intellect": 0.55,
+        "Receptivity": 0.52
+    },
+    {
+        "Trait": "Openness",
+        "Unnamed: 1": "Intellect",
+        "Facet": "Flexibility",
+        "Intellect": 0.32,
+        "Receptivity": 0.44
+    },
+    {
+        "Trait": "Openness",
+        "Unnamed: 1": "Receptivity",
+        "Facet": "Functionality",
+        "Intellect": 0.36,
+        "Receptivity": 0.54
+    },
+    {
+        "Trait": "Openness",
+        "Unnamed: 1": "Receptivity",
+        "Facet": "Self-Awareness",
+        "Intellect": 0.34,
+        "Receptivity": 0.58
+    },
+    {
+        "Trait": "Openness",
+        "Unnamed: 1": "Receptivity",
+        "Facet": "Fantasy",
+        "Intellect": 0.45,
+        "Receptivity": 0.64
+    },
+    {
+        "Trait": "Openness",
+        "Unnamed: 1": "Receptivity",
+        "Facet": "Mindfulness",
+        "Intellect": 0.27,
+        "Receptivity": 0.73
+    },
+    {
+        "Trait": "Openness",
+        "Unnamed: 1": "Receptivity",
+        "Facet": "Imagination",
+        "Intellect": 0.5,
+        "Receptivity": 0.85
+    },
+    {
+        "Trait": "Openness",
+        "Unnamed: 1": "Receptivity",
+        "Facet": "Aesthetics",
+        "Intellect": 0.33,
+        "Receptivity": 0.87
+    },
+    {
+        "Trait": "Conscientiousness",
+        "Unnamed: 1": "INDUSTRIOUSNESS ",
+        "Facet": "Purposefulness",
+        "INDUSTRIOUSNESS ": 0.86,
+        "ORDERLINESS": 0.57
+    },
+    {
+        "Trait": "Conscientiousness",
+        "Unnamed: 1": "INDUSTRIOUSNESS ",
+        "Facet": "Efficiency",
+        "INDUSTRIOUSNESS ": 0.84,
+        "ORDERLINESS": 0.61
+    },
+    {
+        "Trait": "Conscientiousness",
+        "Unnamed: 1": "INDUSTRIOUSNESS ",
+        "Facet": "Willpower",
+        "INDUSTRIOUSNESS ": 0.83,
+        "ORDERLINESS": 0.55
+    },
+    {
+        "Trait": "Conscientiousness",
+        "Unnamed: 1": "INDUSTRIOUSNESS ",
+        "Facet": "Competence",
+        "INDUSTRIOUSNESS ": 0.75,
+        "ORDERLINESS": 0.34
+    },
+    {
+        "Trait": "Conscientiousness",
+        "Unnamed: 1": "INDUSTRIOUSNESS ",
+        "Facet": "Organization",
+        "INDUSTRIOUSNESS ": 0.74,
+        "ORDERLINESS": 0.54
+    },
+    {
+        "Trait": "Conscientiousness",
+        "Unnamed: 1": "INDUSTRIOUSNESS ",
+        "Facet": "Achievement Striving",
+        "INDUSTRIOUSNESS ": 0.65,
+        "ORDERLINESS": 0.42
+    },
+    {
+        "Trait": "Conscientiousness",
+        "Unnamed: 1": "INDUSTRIOUSNESS ",
+        "Facet": "Dutifulness",
+        "INDUSTRIOUSNESS ": 0.63,
+        "ORDERLINESS": 0.5
+    },
+    {
+        "Trait": "Conscientiousness",
+        "Unnamed: 1": "INDUSTRIOUSNESS ",
+        "Facet": "Deliberation",
+        "INDUSTRIOUSNESS ": 0.55,
+        "ORDERLINESS": 0.43
+    },
+    {
+        "Trait": "Conscientiousness",
+        "Unnamed: 1": "ORDERLINESS",
+        "Facet": "Rationality",
+        "INDUSTRIOUSNESS ": 0.6,
+        "ORDERLINESS": 0.6
+    },
+    {
+        "Trait": "Conscientiousness",
+        "Unnamed: 1": "ORDERLINESS",
+        "Facet": "Cautiousness",
+        "INDUSTRIOUSNESS ": 0.44,
+        "ORDERLINESS": 0.46
+    },
+    {
+        "Trait": "Conscientiousness",
+        "Unnamed: 1": "ORDERLINESS",
+        "Facet": "Perfectionism",
+        "INDUSTRIOUSNESS ": 0.42,
+        "ORDERLINESS": 0.67
+    },
+    {
+        "Trait": "Conscientiousness",
+        "Unnamed: 1": "ORDERLINESS",
+        "Facet": "Patterned",
+        "INDUSTRIOUSNESS ": 0.61,
+        "ORDERLINESS": 0.79
+    },
+    {
+        "Trait": "Conscientiousness",
+        "Unnamed: 1": "ORDERLINESS",
+        "Facet": "Integrity",
+        "INDUSTRIOUSNESS ": 0.78,
+        "ORDERLINESS": 0.79
+    },
+    {
+        "Trait": "Conscientiousness",
+        "Unnamed: 1": "ORDERLINESS",
+        "Facet": "Systematic",
+        "INDUSTRIOUSNESS ": 0.54,
+        "ORDERLINESS": 0.87
+    },
+    {
+        "Trait": "Extraversion",
+        "Unnamed: 1": "ENTHUSIASM ",
+        "Facet": "Friendliness",
+        "ENTHUSIASM ": 0.88,
+        "ASSERTIVENESS": 0.48
+    },
+    {
+        "Trait": "Extraversion",
+        "Unnamed: 1": "ENTHUSIASM ",
+        "Facet": "Warmth",
+        "ENTHUSIASM ": 0.79,
+        "ASSERTIVENESS": 0.35
+    },
+    {
+        "Trait": "Extraversion",
+        "Unnamed: 1": "ENTHUSIASM ",
+        "Facet": "Gregariousness",
+        "ENTHUSIASM ": 0.77,
+        "ASSERTIVENESS": 0.71
+    },
+    {
+        "Trait": "Extraversion",
+        "Unnamed: 1": "ENTHUSIASM ",
+        "Facet": "Poise",
+        "ENTHUSIASM ": 0.71,
+        "ASSERTIVENESS": 0.57
+    },
+    {
+        "Trait": "Extraversion",
+        "Unnamed: 1": "ENTHUSIASM ",
+        "Facet": "Cheerfulness",
+        "ENTHUSIASM ": 0.67,
+        "ASSERTIVENESS": 0.43
+    },
+    {
+        "Trait": "Extraversion",
+        "Unnamed: 1": "ENTHUSIASM ",
+        "Facet": "Self-Disclosure",
+        "ENTHUSIASM ": 0.6,
+        "ASSERTIVENESS": 0.48
+    },
+    {
+        "Trait": "Extraversion",
+        "Unnamed: 1": "ENTHUSIASM ",
+        "Facet": "Sociability",
+        "ENTHUSIASM ": 0.48,
+        "ASSERTIVENESS": 0.21
+    },
+    {
+        "Trait": "Extraversion",
+        "Unnamed: 1": "ASSERTIVENESS",
+        "Facet": "Excitement Seeking",
+        "ENTHUSIASM ": 0.27,
+        "ASSERTIVENESS": 0.27
+    },
+    {
+        "Trait": "Extraversion",
+        "Unnamed: 1": "ASSERTIVENESS",
+        "Facet": "Talkativeness",
+        "ENTHUSIASM ": 0.39,
+        "ASSERTIVENESS": 0.58
+    },
+    {
+        "Trait": "Extraversion",
+        "Unnamed: 1": "ASSERTIVENESS",
+        "Facet": "Activity",
+        "ENTHUSIASM ": 0.38,
+        "ASSERTIVENESS": 0.59
+    },
+    {
+        "Trait": "Extraversion",
+        "Unnamed: 1": "ASSERTIVENESS",
+        "Facet": "Provocativeness",
+        "ENTHUSIASM ": 0.25,
+        "ASSERTIVENESS": 0.71
+    },
+    {
+        "Trait": "Extraversion",
+        "Unnamed: 1": "ASSERTIVENESS",
+        "Facet": "Forcefulness",
+        "ENTHUSIASM ": 0.42,
+        "ASSERTIVENESS": 0.83
+    },
+    {
+        "Trait": "Extraversion",
+        "Unnamed: 1": "ASSERTIVENESS",
+        "Facet": "Leadership",
+        "ENTHUSIASM ": 0.56,
+        "ASSERTIVENESS": 0.85
+    },
+    {
+        "Trait": "Agreeableness",
+        "Unnamed: 1": "COMPASSION ",
+        "Facet": "Caring",
+        "COMPASSION ": 0.87,
+        "POLITENESS": 0.45
+    },
+    {
+        "Trait": "Agreeableness",
+        "Unnamed: 1": "COMPASSION ",
+        "Facet": "Sympathy",
+        "COMPASSION ": 0.86,
+        "POLITENESS": 0.46
+    },
+    {
+        "Trait": "Agreeableness",
+        "Unnamed: 1": "COMPASSION ",
+        "Facet": "Understanding",
+        "COMPASSION ": 0.83,
+        "POLITENESS": 0.52
+    },
+    {
+        "Trait": "Agreeableness",
+        "Unnamed: 1": "COMPASSION ",
+        "Facet": "Empathy",
+        "COMPASSION ": 0.69,
+        "POLITENESS": 0.36
+    },
+    {
+        "Trait": "Agreeableness",
+        "Unnamed: 1": "COMPASSION ",
+        "Facet": "Altruism",
+        "COMPASSION ": 0.65,
+        "POLITENESS": 0.64
+    },
+    {
+        "Trait": "Agreeableness",
+        "Unnamed: 1": "COMPASSION ",
+        "Facet": "Tenderness",
+        "COMPASSION ": 0.65,
+        "POLITENESS": 0.28
+    },
+    {
+        "Trait": "Agreeableness",
+        "Unnamed: 1": "COMPASSION ",
+        "Facet": "Utopian",
+        "COMPASSION ": 0.5,
+        "POLITENESS": 0.42
+    },
+    {
+        "Trait": "Agreeableness",
+        "Unnamed: 1": "POLITENESS",
+        "Facet": "Trusting",
+        "COMPASSION ": 0.42,
+        "POLITENESS": 0.42
+    },
+    {
+        "Trait": "Agreeableness",
+        "Unnamed: 1": "POLITENESS",
+        "Facet": "Modesty",
+        "COMPASSION ": 0.22,
+        "POLITENESS": 0.44
+    },
+    {
+        "Trait": "Agreeableness",
+        "Unnamed: 1": "POLITENESS",
+        "Facet": "Straightforward",
+        "COMPASSION ": 0.3,
+        "POLITENESS": 0.67
+    },
+    {
+        "Trait": "Agreeableness",
+        "Unnamed: 1": "POLITENESS",
+        "Facet": "Moral",
+        "COMPASSION ": 0.4,
+        "POLITENESS": 0.67
+    },
+    {
+        "Trait": "Agreeableness",
+        "Unnamed: 1": "POLITENESS",
+        "Facet": "Compliant",
+        "COMPASSION ": 0.35,
+        "POLITENESS": 0.71
+    },
+    {
+        "Trait": "Agreeableness",
+        "Unnamed: 1": "POLITENESS",
+        "Facet": "Pleasant",
+        "COMPASSION ": 0.6,
+        "POLITENESS": 0.72
+    },
+    {
+        "Trait": "Agreeableness",
+        "Unnamed: 1": "POLITENESS",
+        "Facet": "Cooperative",
+        "COMPASSION ": 0.37,
+        "POLITENESS": 0.74
+    },
+    {
+        "Trait": "Agreeableness",
+        "Unnamed: 1": "POLITENESS",
+        "Facet": "Nurturing",
+        "COMPASSION ": 0.63,
+        "POLITENESS": 0.8
+    },
+    {
+        "Trait": "Neuroticism",
+        "Unnamed: 1": "VOLATILITY ",
+        "Facet": "Stability",
+        "VOLATILITY ": -0.86,
+        "WITHDRAWL": -0.69
+    },
+    {
+        "Trait": "Neuroticism",
+        "Unnamed: 1": "VOLATILITY ",
+        "Facet": "Calmness",
+        "VOLATILITY ": -0.81,
+        "WITHDRAWL": -0.53
+    },
+    {
+        "Trait": "Neuroticism",
+        "Unnamed: 1": "VOLATILITY ",
+        "Facet": "Angry Hostility",
+        "VOLATILITY ": 0.76,
+        "WITHDRAWL": 0.54
+    },
+    {
+        "Trait": "Neuroticism",
+        "Unnamed: 1": "VOLATILITY ",
+        "Facet": "Tranquility",
+        "VOLATILITY ": -0.75,
+        "WITHDRAWL": -0.52
+    },
+    {
+        "Trait": "Neuroticism",
+        "Unnamed: 1": "VOLATILITY ",
+        "Facet": "Impulse Control",
+        "VOLATILITY ": -0.7,
+        "WITHDRAWL": -0.32
+    },
+    {
+        "Trait": "Neuroticism",
+        "Unnamed: 1": "VOLATILITY ",
+        "Facet": "Moderation",
+        "VOLATILITY ": -0.7,
+        "WITHDRAWL": -0.63
+    },
+    {
+        "Trait": "Neuroticism",
+        "Unnamed: 1": "VOLATILITY ",
+        "Facet": "Impulsiveness",
+        "VOLATILITY ": 0.59,
+        "WITHDRAWL": 0.43
+    },
+    {
+        "Trait": "Neuroticism",
+        "Unnamed: 1": "VOLATILITY ",
+        "Facet": "Imperturbability",
+        "VOLATILITY ": -0.54,
+        "WITHDRAWL": -0.45
+    },
+    {
+        "Trait": "Neuroticism",
+        "Unnamed: 1": "VOLATILITY ",
+        "Facet": "Acceptance",
+        "VOLATILITY ": -0.3,
+        "WITHDRAWL": -0.27
+    },
+    {
+        "Trait": "Neuroticism",
+        "Unnamed: 1": "WITHDRAWL",
+        "Facet": "Self-consciousness",
+        "VOLATILITY ": 0.41,
+        "WITHDRAWL": 0.76
+    },
+    {
+        "Trait": "Neuroticism",
+        "Unnamed: 1": "WITHDRAWL",
+        "Facet": "Toughness",
+        "VOLATILITY ": -0.66,
+        "WITHDRAWL": -0.77
+    },
+    {
+        "Trait": "Neuroticism",
+        "Unnamed: 1": "WITHDRAWL",
+        "Facet": "Anxiety",
+        "VOLATILITY ": 0.57,
+        "WITHDRAWL": 0.78
+    },
+    {
+        "Trait": "Neuroticism",
+        "Unnamed: 1": "WITHDRAWL",
+        "Facet": "Vulnerability",
+        "VOLATILITY ": 0.59,
+        "WITHDRAWL": 0.78
+    },
+    {
+        "Trait": "Neuroticism",
+        "Unnamed: 1": "WITHDRAWL",
+        "Facet": "Depression",
+        "VOLATILITY ": 0.57,
+        "WITHDRAWL": 0.85
+    },
+    {
+        "Trait": "Neuroticism",
+        "Unnamed: 1": "WITHDRAWL",
+        "Facet": "Happiness",
+        "VOLATILITY ": -0.64,
+        "WITHDRAWL": -0.88
+    }
+]
