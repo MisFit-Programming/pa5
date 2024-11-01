@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Big 5 Personality Test</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Links for Chart.js and jsPDF -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <!-- Usage Agreement Section -->
+    <div id="usage-agreement" class="modal">
+        <h2>Usage Agreement</h2>
+        <p>Please accept the terms to proceed with the test.</p>
+        <button onclick="acceptAgreement()">Accept</button>
+    </div>
+
+    <!-- Header for Scores -->
+    <header id="score-header" style="display: none;">
+        <h1>Big 5 Personality Test Progress</h1>
+        <!-- Toggle Button for Collapsing the Scores -->
+        <button id="toggle-button" onclick="toggleScores()">Show Scores</button>
+        
+        <!-- Scoreboard with Big 5 and Big 10 Scores -->
+        <div id="scoreboard" class="collapsible">
+            <!-- Big 5 Trait Scores -->
+            <div id="big5-scores">
+                <h3>Big 5 Scores</h3>
+                <p><strong>Openness</strong>: <span id="openness-score">0</span></p>
+                <p><strong>Conscientiousness</strong>: <span id="conscientiousness-score">0</span></p>
+                <p><strong>Extraversion</strong>: <span id="extraversion-score">0</span></p>
+                <p><strong>Agreeableness</strong>: <span id="agreeableness-score">0</span></p>
+                <p><strong>Neuroticism</strong>: <span id="neuroticism-score">0</span></p>
+            </div>
+
+            <!-- Big 10 Facet Scores -->
+            <div id="big10-scores">
+                <h3>Big 10 Facet Scores</h3>
+                <p><strong>Intellect</strong>: <span id="intellect-score">0</span></p>
+                <p><strong>Receptivity</strong>: <span id="receptivity-score">0</span></p>
+                <p><strong>Industriousness</strong>: <span id="industriousness-score">0</span></p>
+                <p><strong>Orderliness</strong>: <span id="orderliness-score">0</span></p>
+                <p><strong>Enthusiasm</strong>: <span id="enthusiasm-score">0</span></p>
+                <p><strong>Assertiveness</strong>: <span id="assertiveness-score">0</span></p>
+                <p><strong>Compassion</strong>: <span id="compassion-score">0</span></p>
+                <p><strong>Politeness</strong>: <span id="politeness-score">0</span></p>
+                <p><strong>Volatility</strong>: <span id="volatility-score">0</span></p>
+                <p><strong>Withdrawal</strong>: <span id="withdrawal-score">0</span></p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Test Section -->
+    <main id="test-section" style="display: none;">
+        <div id="question-container">
+            <h2 id="current-question-header">Question</h2>
+            <p id="question-text"></p>
+            <div id="likert-scale">
+                <label><input type="radio" name="response" value="1"> Strongly Disagree</label>
+                <label><input type="radio" name="response" value="2"> Disagree</label>
+                <label><input type="radio" name="response" value="3"> Neutral</label>
+                <label><input type="radio" name="response" value="4"> Agree</label>
+                <label><input type="radio" name="response" value="5"> Strongly Agree</label>
+            </div>
+        </div>
+        <button id="prev-btn" onclick="prevQuestion()">Previous</button>
+        <button id="next-btn" onclick="nextQuestion()">Next</button>
+    </main>
+
+    <!-- Final Report Section -->
+    <section id="final-report" style="display: none; text-align: center;">
+        <h2>Final Report</h2>
+        <canvas id="resultsChart" width="400" height="400"></canvas>
+        <button onclick="exportToPDF()">Export Report as PDF</button>
+    </section>
+
+    <script src="questions.js" defer></script>
+    <script src="script.js" defer></script>
+</body>
+</html>

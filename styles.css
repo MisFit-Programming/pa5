@@ -1,0 +1,121 @@
+/* General Styling */
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+/* Compact Styling for Header */
+header {
+    background-color: #4CAF50;
+    color: white;
+    padding: 0.5em;
+    text-align: center;
+}
+
+/* Toggle button styling */
+#toggle-button {
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 0.5em 1em;
+    font-size: 1em;
+    cursor: pointer;
+    margin: 0.5em 0;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+#toggle-button:hover {
+    background-color: #555;
+}
+
+/* Scoreboard Section with Collapsible Effect */
+#scoreboard {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5em;
+    background-color: #f4f4f4;
+    color: #333;
+    overflow: hidden;
+    max-height: 0; /* Start hidden with max-height set to 0 */
+    transition: max-height 0.3s ease-out, padding 0.3s ease-out; /* Smooth transition */
+}
+
+#scoreboard.show {
+    max-height: 1000px; /* Set a high max-height to reveal the content */
+    padding: 0.5em; /* Padding only applies when expanded */
+}
+
+/* Big 5 and Big 10 Scores Styling */
+#big5-scores, #big10-scores {
+    flex: 1;
+    padding: 0.5em;
+    font-size: 0.9em;
+    line-height: 1.5;
+    text-align: left;
+}
+
+#big5-scores h3, #big10-scores h3 {
+    margin: 0 0 0.5em;
+    font-size: 1em;
+    font-weight: bold;
+}
+
+#big5-scores p, #big10-scores p {
+    margin: 0.2em 0;
+}
+
+/* Modal Styling */
+.modal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 2em;
+    text-align: center;
+    z-index: 1000; /* Ensure modal is on top */
+}
+
+/* Question Container Styling */
+#question-container {
+    margin-top: 2em;
+}
+
+/* Horizontal Likert Scale Styling */
+#likert-scale {
+    display: flex;
+    justify-content: center;
+    gap: 1em;
+    margin-top: 1em;
+}
+
+#likert-scale label {
+    display: inline-flex;
+    align-items: center;
+    margin: 0;
+}
+
+/* General Button Styling */
+button {
+    padding: 10px 20px;
+    margin: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #4CAF50;
+    color: white;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #45a049;
+}
