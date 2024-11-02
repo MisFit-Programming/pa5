@@ -64,7 +64,7 @@ function setupLikertListeners() {
 }
 
 function handleLikertClick(event) {
-    selectedResponse = parseInt(event.target.getAttribute('data-value'));
+    selectedResponse = parseInt(event.target.getAttribute('data-value'), 10);
     updateLikertSelection();
 }
 
@@ -102,22 +102,25 @@ function prevQuestion() {
 function saveResponse() {
     const question = questions[currentQuestionIndex];
     
+    // Remove previous score if it exists to avoid double counting
     if (responses[currentQuestionIndex]) removePreviousScore();
 
     responses[currentQuestionIndex] = selectedResponse;
 
-    const scoresToApply = selectedResponse >= 3 ? question.facet.agreeScores : question.facet.disagreeScores;
-
-    for (const [aspect, value] of Object.entries(scoresToApply)) {
+    // Multiply each aspect score by the selected response (-2 to 2) and add to the respective scores
+    for (const [aspect, baseScore] of Object.entries(question.facet.scores)) {
         if (scores[aspect] !== undefined) {
-            scores[aspect] += value;
+            // Apply the multiplier, which could be positive or negative
+            scores[aspect] += baseScore * selectedResponse;
         } else {
             console.warn(`Aspect ${aspect} not found in scores object.`);
         }
     }
 
+    // Update the Big 5 traits based on the sum of their respective aspects
     updateBig5Scores();
 
+    // Log the updated scores to the console for debugging
     console.log("Current Scores:", scores);
 }
 
@@ -152,6 +155,7 @@ function updateBig5Scores() {
 
     updateScores();
 }
+
 
 function updateScores() {
     document.getElementById("openness-score").innerText = scores.Openness;
@@ -224,26 +228,31 @@ function createBarChart(ctx, labels, data, title) {
 }
 
 function createPieChart(ctx, labels, data, title) {
+    // Replace negative values with zero for pie chart display
+    const sanitizedData = data.map(value => (value < 0 ? 0 : value));
+
     return new Chart(ctx, {
         type: 'pie',
         data: { 
             labels, 
             datasets: [{
-                data,
+                data: sanitizedData,
                 backgroundColor: generateChartColors(labels.length, 0.7),
                 borderWidth: 2 
             }]
         },
-        options: { 
+        options: {
             responsive: true,
-            plugins: { 
-                legend: { 
-                    position: 'top' 
+            plugins: {
+                title: {
+                    display: true,
+                    text: title
                 }
             }
         }
     });
 }
+
 
 function generateChartColors(count, alpha) {
     const baseColors = [

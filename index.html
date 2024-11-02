@@ -60,14 +60,15 @@
         <h2 id="current-question-header"></h2> <!-- Progress indicator (Question X of Y) -->
         <p id="question-text"></p> <!-- Main question text with larger font -->
         <div id="likert-scale" class="likert-bar">
-            <label for="likert-1">Disagree</label>
-            <div class="bar-segment" data-value="1" tabindex="0" aria-label="Strongly Disagree"></div>
-            <div class="bar-segment" data-value="2" tabindex="0" aria-label="Disagree"></div>
-            <div class="bar-segment" data-value="3" tabindex="0" aria-label="Neutral"></div>
-            <div class="bar-segment" data-value="4" tabindex="0" aria-label="Agree"></div>
-            <div class="bar-segment" data-value="5" tabindex="0" aria-label="Strongly Agree"></div>
-            <label for="likert-5">Agree</label>
+            <label for="likert-1">Strongly Disagree</label>
+            <div class="bar-segment" data-value="-2" tabindex="0" aria-label="Strongly Disagree">-2</div>
+            <div class="bar-segment" data-value="-1" tabindex="0" aria-label="Disagree">-1</div>
+            <div class="bar-segment" data-value="0" tabindex="0" aria-label="Neutral">0</div>
+            <div class="bar-segment" data-value="1" tabindex="0" aria-label="Agree">1</div>
+            <div class="bar-segment" data-value="2" tabindex="0" aria-label="Strongly Agree">2</div>
+            <label for="likert-5">Strongly Agree</label>
         </div>
+
     </div>
     <div class="navigation-buttons">
         <button class="button" id="prev-btn" onclick="prevQuestion()">Previous</button>
@@ -89,6 +90,7 @@
                 <h3>Big 10 Clusters - Bar Chart</h3>
                 <canvas id="barBig10Chart"></canvas>
             </div>
+            
             <div class="chart">
                 <h3>Big 5 Traits - Pie Chart</h3>
                 <canvas id="pieBig5Chart"></canvas>
