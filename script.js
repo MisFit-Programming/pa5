@@ -1,6 +1,7 @@
 // Initialize question index, responses storage, and scores
 let currentQuestionIndex = 0;
 const responses = {}; // Stores responses by question index
+let examPrefix = ""; // Store the user prefix
 
 const scores = {
     Openness: 0, Conscientiousness: 0, Extraversion: 0, Agreeableness: 0, Neuroticism: 0,
@@ -27,6 +28,15 @@ function initializeApp() {
 
 // Accept agreement and display the first question
 function acceptAgreement() {
+        const prefixInput = document.getElementById("prefix-input").value.trim();
+    
+    // Validate prefix - it should be 3 characters and will be converted to uppercase
+    if (prefixInput.length === 3) {
+        examPrefix = prefixInput.toUpperCase();
+    } else {
+        alert("Please enter a 3-character prefix.");
+        return; // Exit if prefix is not valid
+    }
     document.getElementById("usage-agreement").style.display = "none";
     document.getElementById("test-section").style.display = "block";
     document.getElementById("score-header").style.display = "flex";
@@ -202,7 +212,7 @@ function renderAllCharts() {
 }
 
 function createBarChart(ctx, labels, data, title) {
-    const maxScore = Math.max(...data) * 1.2; // Add a 20% buffer for padding above the max score
+    const backgroundColors = labels.map(label => aspectColors[label] || traitColors[label] || "#cccccc");
 
     return new Chart(ctx, {
         type: 'bar',
@@ -210,17 +220,22 @@ function createBarChart(ctx, labels, data, title) {
             labels, 
             datasets: [{
                 label: title,
-                data,
-                backgroundColor: generateChartColors(labels.length, 0.6),
-                borderWidth: 1 
+                data: data,
+                backgroundColor: backgroundColors,
+                borderWidth: 1
             }]
         },
         options: { 
             responsive: true,
             scales: { 
                 y: { 
-                    beginAtZero: true, 
-                    max: maxScore // Automatically adjusts based on highest data value
+                    beginAtZero: false
+                }
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    text: title
                 }
             }
         }
@@ -228,17 +243,16 @@ function createBarChart(ctx, labels, data, title) {
 }
 
 function createPieChart(ctx, labels, data, title) {
-    // Replace negative values with zero for pie chart display
-    const sanitizedData = data.map(value => (value < 0 ? 0 : value));
+    const backgroundColors = labels.map(label => aspectColors[label] || traitColors[label] || "#cccccc");
 
     return new Chart(ctx, {
         type: 'pie',
         data: { 
             labels, 
             datasets: [{
-                data: sanitizedData,
-                backgroundColor: generateChartColors(labels.length, 0.7),
-                borderWidth: 2 
+                data: data,
+                backgroundColor: backgroundColors,
+                borderWidth: 2
             }]
         },
         options: {
@@ -252,6 +266,7 @@ function createPieChart(ctx, labels, data, title) {
         }
     });
 }
+
 
 
 function generateChartColors(count, alpha) {
@@ -340,13 +355,13 @@ async function exportToPDF() {
     }
 }
 
+// Function to generate a 16-digit numeric exam number with prefix
 function generateExamNumber() {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let result = '';
+    let numericExamNumber = "";
     for (let i = 0; i < 16; i++) {
-        result += chars.charAt(Math.floor(Math.random() * chars.length));
+        numericExamNumber += Math.floor(Math.random() * 10); // Generates a digit (0-9)
     }
-    return result;
+    return `${examPrefix}-${numericExamNumber}`; // Combine prefix with the numeric exam number
 }
 
 function toggleScores() {
@@ -354,4 +369,27 @@ function toggleScores() {
     scoreboard.classList.toggle("show");
     document.getElementById("toggle-button").innerText = scoreboard.classList.contains("show") ? "Hide Scores" : "Show Scores";
 }
+
+// Define colors for Big 5 traits and their respective Big 10 aspects
+const traitColors = {
+    Openness: "#fefa92",
+    Conscientiousness: "#80c7aa",
+    Extraversion: "#ffe9bc",
+    Agreeableness: "#bbeaff",
+    Neuroticism: "#e0cedd"
+};
+
+const aspectColors = {
+    Intellect: traitColors.Openness,
+    Receptivity: traitColors.Openness,
+    Industriousness: traitColors.Conscientiousness,
+    Orderliness: traitColors.Conscientiousness,
+    Enthusiasm: traitColors.Extraversion,
+    Assertiveness: traitColors.Extraversion,
+    Compassion: traitColors.Agreeableness,
+    Politeness: traitColors.Agreeableness,
+    Volatility: traitColors.Neuroticism,
+    Withdrawal: traitColors.Neuroticism
+};
+
 
