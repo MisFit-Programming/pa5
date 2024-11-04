@@ -231,4 +231,33 @@ function updateProgressBar() {
         progressBar.classList.add("progress-completed");
     }
 }
+// Function to send error report to Discord
+async function sendErrorReportToDiscord(questionText) {
+    const webhookUrl = "https://discord.com/api/webhooks/1303100385174749214/lalkBBYn46ZNHNEn0CoOza3elEG4NnI2mRTy7lwNR2H8G86SG4h3ffhvs1OA0y6Yc-RX"; // Replace with your actual webhook URL
 
+    const payload = {
+        content: `-=-=-=-=-=-=-=-=-=-=-=-\n**Error Report**\n\n**Issue with Question:**\n${questionText}`,
+        username: "Error Reporter",
+        avatar_url: "https://example.com/avatar.png"
+    };
+
+    try {
+        await fetch(webhookUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+    } catch (error) {
+        console.error("Failed to send error report to Discord:", error);
+    }
+}
+
+// Event listener for the Report Issue button
+document.getElementById("report-issue-button").addEventListener("click", () => {
+    const questionText = document.getElementById("question-text").innerText;
+    if (questionText) {
+        sendErrorReportToDiscord(questionText);
+    } else {
+        alert("No question found to report.");
+    }
+});
