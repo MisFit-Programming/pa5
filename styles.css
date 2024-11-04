@@ -17,6 +17,12 @@
     --selected-border: #388E3C;
 }
 
+/* Hide all sections by default to ensure they only appear when triggered by JavaScript */
+#usage-agreement, #question-selection, #test-section, #final-report {
+    display: none;
+}
+
+
 /* General Styles */
 body {
     font-family: 'Roboto', sans-serif;
@@ -26,6 +32,15 @@ body {
     padding: 0;
     line-height: 1.6;
     text-align: center;
+    overflow-x: hidden;
+}
+
+/* Section Visibility Management */
+#usage-agreement {
+    display: flex; /* Only the usage agreement modal is visible initially */
+}
+#question-selection, #test-section, #final-report {
+    display: none; /* Hide other sections initially */
 }
 
 /* Header Styling */
@@ -37,8 +52,21 @@ header {
     width: 100%;
     display: flex;
     justify-content: center;
+    align-items: center;
     box-sizing: border-box;
     font-size: 1.5em;
+    position: relative;
+    z-index: 100;
+}
+#score-header {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 1em 0;
+    font-size: 1.5em;
+    text-align: center;
+    display: none; /* Initially hidden, shown when the test starts */
+    width: 100%; /* Ensures it spans the full width */
+    box-sizing: border-box; /* Includes padding in width calculation */
 }
 
 /* Test Section Styling */
@@ -47,6 +75,7 @@ header {
     flex-direction: column;
     align-items: center;
     margin-top: 2em;
+    padding: 1em;
     width: 100%;
 }
 
@@ -55,56 +84,80 @@ header {
     width: 80%;
     max-width: 600px;
     margin: 1.5em auto;
+    padding: 1em;
+    background-color: white;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
 }
 
 /* Progress Indicator Styling */
 .progress-indicator {
     font-size: 1.2em;
     margin-bottom: 1em;
+    font-weight: 500;
 }
 
 /* Main Question Text Styling */
 .question-text {
     font-size: 1.5em;
     margin-bottom: 1.5em;
+    font-weight: bold;
 }
 
 /* Likert Scale Styling */
 .likert-bar {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
+    margin: 1em 0;
     gap: 10px;
-    margin-bottom: 1.5em;
 }
 
-/* Likert Scale Labels */
+/* Individual Labels for Likert Scale */
 .likert-bar label {
     font-weight: bold;
     color: var(--text-color);
-    margin: 0 10px;
+    font-size: 0.9em;
+    width: 20%; /* Ensures even spacing */
+    text-align: center;
+    margin: 0;
 }
 
-/* Likert Scale Segments */
+/* Style for each Likert segment */
 .bar-segment {
-    width: 50px;
-    height: 25px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5em;
     cursor: pointer;
     border-radius: 5px;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s ease, border 0.3s ease;
+    color: #fff;
+    font-weight: bold;
+    border: 1px solid transparent;
 }
 
-/* Gradient Colors */
-.bar-segment[data-value="-2"] { background-color: #ff6666; } /* Strongly Disagree */
-.bar-segment[data-value="-1"] { background-color: #ff9999; } /* Disagree */
-.bar-segment[data-value="0"] { background-color: #e6e6e6; } /* Neutral */
-.bar-segment[data-value="1"] { background-color: #99e699; } /* Agree */
-.bar-segment[data-value="2"] { background-color: #66cc66; } /* Strongly Agree */
+/* Color assignments for each segment */
+.bar-segment[data-value="-2"] { background-color: #ff6666; } /* Strong Dislike */
+.bar-segment[data-value="-1"] { background-color: #ff9999; } /* Dislike */
+.bar-segment[data-value="0"] { background-color: #e6e6e6; color: #333; } /* Neutral */
+.bar-segment[data-value="1"] { background-color: #99e699; } /* Like */
+.bar-segment[data-value="2"] { background-color: #66cc66; } /* Strong Like */
 
+/* Hover and Selected styles */
 .bar-segment:hover,
 .bar-segment.selected {
-border: 1px solid var(--selected-border); /* Highlight for selected or hovered segment */
     border: 1px solid var(--selected-border);
+    opacity: 0.9;
+}
+
+/* Timer Styling */
+.timer-display {
+    font-size: 1.5em;
+    margin: 10px 0;
+    font-weight: bold;
+    color: var(--highlight-color);
+    transition: color 0.5s ease; /* Smooth color transition */
 }
 
 /* Navigation Buttons Styling */
@@ -112,6 +165,7 @@ border: 1px solid var(--selected-border); /* Highlight for selected or hovered s
     display: flex;
     gap: 1em;
     justify-content: center;
+    margin-top: 1em;
 }
 
 /* Button Styling */
@@ -158,6 +212,7 @@ button:hover {
 .modal p {
     font-size: 1em;
     margin-bottom: 1.5em;
+    line-height: 1.4;
 }
 
 .modal button {
@@ -178,10 +233,11 @@ button:hover {
     max-width: 600px;
     border: 1px solid #ddd;
     border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* Canvas Chart Styling */
-canvas#resultsChart {
+canvas {
     margin-top: 20px;
     max-width: 100%;
     height: auto;
@@ -215,7 +271,7 @@ canvas#resultsChart {
         flex-direction: column;
         gap: 10px;
     }
-    canvas#resultsChart {
+    canvas {
         width: 100% !important;
         height: auto !important;
     }
