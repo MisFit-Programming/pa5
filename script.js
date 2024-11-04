@@ -2,6 +2,8 @@
 let currentQuestionIndex = 0;
 const responses = {}; // Stores responses by question index
 let examPrefix = ""; // Store the user prefix
+let countdown; // Holds the setInterval reference for the countdown timer
+let timeLeft = 10; // Countdown time in seconds
 
 const scores = {
     Openness: 0, Conscientiousness: 0, Extraversion: 0, Agreeableness: 0, Neuroticism: 0,
@@ -26,16 +28,16 @@ function initializeApp() {
     document.getElementById("usage-agreement").style.display = "flex";
 }
 
-// Accept agreement and display the first question
+// Accept agreement, get prefix, and display the first question
 function acceptAgreement() {
-        const prefixInput = document.getElementById("prefix-input").value.trim();
-    
+    const prefixInput = document.getElementById("prefix-input").value.trim();
+
     // Validate prefix - it should be 3 characters and will be converted to uppercase
     if (prefixInput.length === 3) {
         examPrefix = prefixInput.toUpperCase();
     } else {
         alert("Please enter a 3-character prefix.");
-        return; // Exit if prefix is not valid
+        return;
     }
     document.getElementById("usage-agreement").style.display = "none";
     document.getElementById("test-section").style.display = "block";
@@ -43,7 +45,7 @@ function acceptAgreement() {
     displayQuestion();
 }
 
-// Display the current question
+// Display the current question and start the countdown timer
 function displayQuestion() {
     if (currentQuestionIndex >= questions.length) {
         showFinalReport();
@@ -61,8 +63,43 @@ function displayQuestion() {
     selectedResponse = responses[currentQuestionIndex] || null;
     updateLikertSelection();
     setupLikertListeners();
+
+    // Reset and start the countdown timer for each question
+    timeLeft = 10;
+    updateTimerDisplay();
+    startTimer();
 }
 
+// Timer-related functions
+function startTimer() {
+    clearInterval(countdown);
+    countdown = setInterval(() => {
+        timeLeft--;
+        updateTimerDisplay();
+        
+        if (timeLeft <= 0) {
+            clearInterval(countdown);
+            saveDefaultResponse();
+            autoAdvance();
+        }
+    }, 1000);
+}
+
+// Update the timer display in the UI
+function updateTimerDisplay() {
+    const timerElement = document.getElementById("timer");
+    timerElement.innerText = `Time left: ${timeLeft}s`;
+}
+
+// Save a default response of 0 if the timer expires
+function saveDefaultResponse() {
+    if (!responses[currentQuestionIndex]) {
+        selectedResponse = 0; // Default to 0 if unanswered
+        saveResponse();
+    }
+}
+
+// Set up Likert scale selection listeners
 function setupLikertListeners() {
     const segments = document.querySelectorAll('.bar-segment');
     segments.forEach(segment => {
@@ -76,6 +113,8 @@ function setupLikertListeners() {
 function handleLikertClick(event) {
     selectedResponse = parseInt(event.target.getAttribute('data-value'), 10);
     updateLikertSelection();
+    saveResponse(); // Save and auto-advance on selection
+    autoAdvance();
 }
 
 function handleBarSegmentKeydown(event) {
@@ -85,77 +124,43 @@ function handleBarSegmentKeydown(event) {
     }
 }
 
+// Update Likert scale selection
 function updateLikertSelection() {
     document.querySelectorAll('.bar-segment').forEach(segment => {
         segment.classList.toggle('selected', segment.getAttribute('data-value') === selectedResponse?.toString());
     });
 }
 
-function nextQuestion() {
-    if (selectedResponse === null) {
-        alert("Please select an answer before proceeding.");
-        return;
-    }
-    saveResponse();
-    currentQuestionIndex < questions.length - 1 ? currentQuestionIndex++ : showFinalReport();
-    displayQuestion();
-}
-
-function prevQuestion() {
-    if (currentQuestionIndex > 0) {
-        removePreviousScore();
-        currentQuestionIndex--;
+// Automatically proceed to the next question or show final report if last question
+function autoAdvance() {
+    if (currentQuestionIndex < questions.length - 1) {
+        currentQuestionIndex++;
         displayQuestion();
+    } else {
+        clearInterval(countdown); // Clear any remaining timer interval
+        showFinalReport(); // Show report if last question
     }
 }
 
+// Save response with scoring adjustment for each question
 function saveResponse() {
     const question = questions[currentQuestionIndex];
     
-    // Remove previous score if it exists to avoid double counting
     if (responses[currentQuestionIndex]) removePreviousScore();
-
     responses[currentQuestionIndex] = selectedResponse;
 
-    // Multiply each aspect score by the selected response (-2 to 2) and add to the respective scores
+    // Apply multiplier for each aspect score and add to respective scores
     for (const [aspect, baseScore] of Object.entries(question.facet.scores)) {
         if (scores[aspect] !== undefined) {
-            // Apply the multiplier, which could be positive or negative
             scores[aspect] += baseScore * selectedResponse;
         } else {
             console.warn(`Aspect ${aspect} not found in scores object.`);
         }
     }
-
-    // Update the Big 5 traits based on the sum of their respective aspects
     updateBig5Scores();
-
-    // Log the updated scores to the console for debugging
-    console.log("Current Scores:", scores);
 }
 
-function removePreviousScore() {
-    const previousScore = responses[currentQuestionIndex];
-    if (previousScore) {
-        const question = questions[currentQuestionIndex];
-        const scoresToRemove = previousScore >= 4 ? question.facet.agreeScores : question.facet.disagreeScores;
-        for (const [trait, weight] of Object.entries(scoresToRemove)) {
-            scores[trait] -= weight;
-        }
-        delete responses[currentQuestionIndex];
-        updateScores();
-        logScores();
-    }
-}
-
-function logScores() {
-    console.log("Current Scores:");
-    for (const [trait, score] of Object.entries(scores)) {
-        console.log(`${trait}: ${score.toFixed(2)}`);
-    }
-}
-
-// Calculate Big 5 scores as the sum of their respective aspects
+// Update Big 5 scores based on respective aspects
 function updateBig5Scores() {
     scores.Openness = scores.Intellect + scores.Receptivity;
     scores.Conscientiousness = scores.Industriousness + scores.Orderliness;
@@ -166,7 +171,7 @@ function updateBig5Scores() {
     updateScores();
 }
 
-
+// Update the displayed scores in the UI
 function updateScores() {
     document.getElementById("openness-score").innerText = scores.Openness;
     document.getElementById("conscientiousness-score").innerText = scores.Conscientiousness;
@@ -185,6 +190,7 @@ function updateScores() {
     document.getElementById("withdrawal-score").innerText = scores.Withdrawal;
 }
 
+// Show the final report and render all charts
 function showFinalReport() {
     document.getElementById("test-section").style.display = "none";
     document.getElementById("score-header").style.display = "none";
@@ -192,11 +198,12 @@ function showFinalReport() {
     renderAllCharts();
 }
 
+// Render charts in the final report
 function renderAllCharts() {
-    const barBig5Ctx = document.getElementById("barBig5Chart").getContext("2d", { willReadFrequently: true });
-    const barBig10Ctx = document.getElementById("barBig10Chart").getContext("2d", { willReadFrequently: true });
-    const pieBig5Ctx = document.getElementById("pieBig5Chart").getContext("2d", { willReadFrequently: true });
-    const pieBig10Ctx = document.getElementById("pieBig10Chart").getContext("2d", { willReadFrequently: true });
+    const barBig5Ctx = document.getElementById("barBig5Chart").getContext("2d");
+    const barBig10Ctx = document.getElementById("barBig10Chart").getContext("2d");
+    const pieBig5Ctx = document.getElementById("pieBig5Chart").getContext("2d");
+    const pieBig10Ctx = document.getElementById("pieBig10Chart").getContext("2d");
 
     const big5Traits = ["Openness", "Conscientiousness", "Extraversion", "Agreeableness", "Neuroticism"];
     const big10Clusters = ["Intellect", "Receptivity", "Industriousness", "Orderliness", "Enthusiasm", "Assertiveness", "Compassion", "Politeness", "Volatility", "Withdrawal"];
@@ -229,7 +236,7 @@ function createBarChart(ctx, labels, data, title) {
             responsive: true,
             scales: { 
                 y: { 
-                    beginAtZero: false
+                    beginAtZero: true
                 }
             },
             plugins: {
@@ -267,19 +274,7 @@ function createPieChart(ctx, labels, data, title) {
     });
 }
 
-
-
-function generateChartColors(count, alpha) {
-    const baseColors = [
-        `rgba(54, 162, 235, ${alpha})`, 
-        `rgba(255, 206, 86, ${alpha})`, 
-        `rgba(75, 192, 192, ${alpha})`, 
-        `rgba(153, 102, 255, ${alpha})`, 
-        `rgba(255, 159, 64, ${alpha})`
-    ];
-    return Array.from({ length: count }, (_, i) => baseColors[i % baseColors.length]);
-}
-
+// Export report to PDF with all charts
 async function exportToPDF() {
     const loadingIndicator = document.getElementById("pdf-loading");
     loadingIndicator.style.display = 'flex';
@@ -355,19 +350,13 @@ async function exportToPDF() {
     }
 }
 
-// Function to generate a 16-digit numeric exam number with prefix
+// Generate a 16-digit numeric exam number with prefix
 function generateExamNumber() {
     let numericExamNumber = "";
     for (let i = 0; i < 16; i++) {
-        numericExamNumber += Math.floor(Math.random() * 10); // Generates a digit (0-9)
+        numericExamNumber += Math.floor(Math.random() * 10);
     }
-    return `${examPrefix}-${numericExamNumber}`; // Combine prefix with the numeric exam number
-}
-
-function toggleScores() {
-    const scoreboard = document.getElementById("scoreboard");
-    scoreboard.classList.toggle("show");
-    document.getElementById("toggle-button").innerText = scoreboard.classList.contains("show") ? "Hide Scores" : "Show Scores";
+    return `${examPrefix}-${numericExamNumber}`;
 }
 
 // Define colors for Big 5 traits and their respective Big 10 aspects
@@ -392,4 +381,13 @@ const aspectColors = {
     Withdrawal: traitColors.Neuroticism
 };
 
+// Display timer in UI
+document.addEventListener('DOMContentLoaded', () => {
+    const timerElement = document.createElement('div');
+    timerElement.id = 'timer';
+    timerElement.style.fontSize = '1.2em';
+    timerElement.style.margin = '10px 0';
+    document.getElementById("question-container").prepend(timerElement);
+    displayQuestion();
+});
 

@@ -94,15 +94,16 @@ header {
     transition: background-color 0.3s;
 }
 
-.bar-segment[data-value="1"] { background-color: var(--segment-strongly-disagree); }
-.bar-segment[data-value="2"] { background-color: var(--segment-disagree); }
-.bar-segment[data-value="3"] { background-color: var(--segment-neutral); }
-.bar-segment[data-value="4"] { background-color: var(--segment-agree); }
-.bar-segment[data-value="5"] { background-color: var(--segment-strongly-agree); }
+/* Gradient Colors */
+.bar-segment[data-value="-2"] { background-color: #ff6666; } /* Strongly Disagree */
+.bar-segment[data-value="-1"] { background-color: #ff9999; } /* Disagree */
+.bar-segment[data-value="0"] { background-color: #e6e6e6; } /* Neutral */
+.bar-segment[data-value="1"] { background-color: #99e699; } /* Agree */
+.bar-segment[data-value="2"] { background-color: #66cc66; } /* Strongly Agree */
 
 .bar-segment:hover,
 .bar-segment.selected {
-    background-color: var(--highlight-color);
+border: 1px solid var(--selected-border); /* Highlight for selected or hovered segment */
     border: 1px solid var(--selected-border);
 }
 
