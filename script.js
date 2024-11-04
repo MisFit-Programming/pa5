@@ -104,6 +104,8 @@ function displayQuestion() {
         updateTimerDisplay();
         startTimer();
     }
+        // Update progress bar
+    updateProgressBar();
 }
 
 // Display a message for the first question and pause the timer
@@ -217,3 +219,16 @@ document.addEventListener('DOMContentLoaded', () => {
     timerElement.style.margin = '10px 0';
     document.getElementById("question-container").prepend(timerElement);
 });
+// Update progress bar on each question
+function updateProgressBar() {
+    const progressBar = document.getElementById("progress-bar");
+    const progressPercent = ((currentQuestionIndex + 1) / selectedQuestions.length) * 100;
+
+    progressBar.style.width = `${progressPercent}%`;
+
+    // Change color to green if progress is complete
+    if (progressPercent === 100) {
+        progressBar.classList.add("progress-completed");
+    }
+}
+

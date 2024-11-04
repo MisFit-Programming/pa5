@@ -76,7 +76,10 @@
     <main id="test-section" style="display: none;">
         <div id="question-container">
             <h2 id="current-question-header"></h2> <!-- Progress indicator (Question X of Y) -->
-            <p id="question-text"></p> <!-- Main question text with larger font -->
+            <div class="progress-container">
+                <div id="progress-bar"></div>
+            </div>
+            <p class="question-text" id="question-text">Your question will appear here.</p> <!-- Main question text with larger font -->
 <div id="likert-scale" class="likert-bar">
     <div class="bar-segment" data-value="-2" tabindex="0" aria-label="Strong Disagree">Strong Disagree</div>
     <div class="bar-segment" data-value="-1" tabindex="0" aria-label="Disagree">Disagree</div>
@@ -84,7 +87,6 @@
     <div class="bar-segment" data-value="1" tabindex="0" aria-label="Agree">Agree</div>
     <div class="bar-segment" data-value="2" tabindex="0" aria-label="Strong Agree">Strong Agree</div>
 </div>
-
         </div>
     </main>
 

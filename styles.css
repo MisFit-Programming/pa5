@@ -276,3 +276,39 @@ canvas {
         height: auto !important;
     }
 }
+/* Progress Bar Container */
+.progress-container {
+    width: 80%;
+    height: 20px;
+    background-color: #f3f3f3;
+    border-radius: 10px;
+    margin: 1em auto; /* Center the progress bar */
+    box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+/* Progress Bar itself */
+#progress-bar {
+    height: 100%;
+    width: 0%; /* Initial width of 0% */
+    background-color: #ff4d4d; /* Start color: Red */
+    border-radius: 10px 0 0 10px;
+    transition: width 0.3s ease, background-color 0.3s ease; /* Smooth transition */
+}
+/* Progress Indicator Styling (Question X of Y) */
+#current-question-header {
+    font-size: 1em; /* Twice as large for the progress indicator */
+    margin-bottom: 1em;
+    font-weight: bold; /* Bolder font weight for clear emphasis */
+    color: var(--text-color);
+}
+
+/* Main Question Text Styling */
+.question-text {
+    font-size: 1.5em; /* Four times larger for the question text */
+    margin-bottom: 1.5em;
+    font-weight: bold;
+    line-height: 1.2; /* Adjust line height for readability */
+    color: var(--text-color);
+}
+
