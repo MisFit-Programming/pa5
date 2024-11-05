@@ -10,12 +10,13 @@ let isFirstQuestion = true;  // Flag to identify the first question
 const responses = {};
 let examPrefix = "";
 
-// Initialize scores object
+// Initialize scores for traits and facets
 const scores = {
     Openness: 0, Conscientiousness: 0, Extraversion: 0, Agreeableness: 0, Neuroticism: 0,
     Intellect: 0, Receptivity: 0, Industriousness: 0, Orderliness: 0, Enthusiasm: 0,
     Assertiveness: 0, Compassion: 0, Politeness: 0, Volatility: 0, Withdrawal: 0
 };
+const facetScores = {}; // Track facet-level scores
 
 // Initialize the app on DOM content load
 document.addEventListener('DOMContentLoaded', () => {
@@ -104,7 +105,7 @@ function displayQuestion() {
         updateTimerDisplay();
         startTimer();
     }
-        // Update progress bar
+    // Update progress bar
     updateProgressBar();
 }
 
@@ -171,11 +172,18 @@ function saveResponse() {
     const question = selectedQuestions[currentQuestionIndex];
     responses[currentQuestionIndex] = selectedResponse;
 
+    // Update trait and facet scores
     for (const [aspect, baseScore] of Object.entries(question.facet.scores)) {
         if (scores[aspect] !== undefined) {
             scores[aspect] += baseScore * selectedResponse;
         }
     }
+
+    // Update facet scores
+    const facetName = question.facet.name;
+    if (!facetScores[facetName]) facetScores[facetName] = 0;
+    facetScores[facetName] += selectedResponse;
+
     updateBig5Scores();
 
     // If this was the first question, handle the first answer logic
@@ -204,11 +212,51 @@ function autoAdvance() {
     }
 }
 
-// Show the final report and render charts
+// Show the final report, render charts, and display facet scores
 function showFinalReport() {
     console.log("Showing Final Report");
     showSection("final-report");
     renderAllCharts();
+    displayFacetTotals();
+}
+
+// Display facet totals in a grid format in the final report, sorted by highest to lowest
+function displayFacetTotals() {
+    const facetScoresContainer = document.getElementById("facet-scores");
+    facetScoresContainer.innerHTML = ""; // Clear previous content
+
+    // Convert facetScores object to an array and sort by score
+    const sortedFacetScores = Object.entries(facetScores).sort((a, b) => b[1] - a[1]);
+
+    // Create grid header
+    const headerRow = document.createElement("div");
+    headerRow.className = "facet-grid-header";
+    headerRow.innerHTML = `
+        <div class="facet-grid-item"><strong>Facet</strong></div>
+        <div class="facet-grid-item"><strong>Score</strong></div>
+    `;
+    facetScoresContainer.appendChild(headerRow);
+
+    // Display each facet in grid format with appropriate aspect color
+    sortedFacetScores.forEach(([facet, score]) => {
+        const facetRow = document.createElement("div");
+        facetRow.className = "facet-grid-row";
+
+        const aspect = findAspectForFacet(facet); // Find the aspect for the facet
+        const color = aspectColors[aspect] || "#ddd"; // Default to light gray if no color found
+
+        facetRow.innerHTML = `
+            <div class="facet-grid-item" style="background-color: ${color};">${facet}</div>
+            <div class="facet-grid-item">${score.toFixed(2)}</div>
+        `;
+        facetScoresContainer.appendChild(facetRow);
+    });
+}
+
+// Helper function to find the aspect based on facet name
+function findAspectForFacet(facetName) {
+    const question = questions.find(q => q.facet.name === facetName);
+    return question ? question.aspect : null;
 }
 
 // Display timer in UI on each question
@@ -219,6 +267,7 @@ document.addEventListener('DOMContentLoaded', () => {
     timerElement.style.margin = '10px 0';
     document.getElementById("question-container").prepend(timerElement);
 });
+
 // Update progress bar on each question
 function updateProgressBar() {
     const progressBar = document.getElementById("progress-bar");
@@ -231,33 +280,3 @@ function updateProgressBar() {
         progressBar.classList.add("progress-completed");
     }
 }
-// Function to send error report to Discord
-async function sendErrorReportToDiscord(questionText) {
-    const webhookUrl = "https://discord.com/api/webhooks/1303100385174749214/lalkBBYn46ZNHNEn0CoOza3elEG4NnI2mRTy7lwNR2H8G86SG4h3ffhvs1OA0y6Yc-RX"; // Replace with your actual webhook URL
-
-    const payload = {
-        content: `-=-=-=-=-=-=-=-=-=-=-=-\n**Error Report**\n\n**Issue with Question:**\n${questionText}`,
-        username: "Error Reporter",
-        avatar_url: "https://example.com/avatar.png"
-    };
-
-    try {
-        await fetch(webhookUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
-        });
-    } catch (error) {
-        console.error("Failed to send error report to Discord:", error);
-    }
-}
-
-// Event listener for the Report Issue button
-document.getElementById("report-issue-button").addEventListener("click", () => {
-    const questionText = document.getElementById("question-text").innerText;
-    if (questionText) {
-        sendErrorReportToDiscord(questionText);
-    } else {
-        alert("No question found to report.");
-    }
-});

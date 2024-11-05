@@ -11,16 +11,16 @@
 <body>
     <!-- Question Selection Modal -->
     <div id="question-selection" class="modal" style="display: none;">
-        <h2>Select Number of Questions Per Facet</h2>
+        <h2>Select Number of Questions Per Facet</h2><br />
         <label>
-            <input type="radio" name="question-count" value="1"> Small
-        </label>
+            <input type="radio" name="question-count" value="1"> Big 5 (Least Accurate)
+        </label><br />
         <label>
-            <input type="radio" name="question-count" value="2"> Medium
-        </label>
+            <input type="radio" name="question-count" value="2"> Big 5 & Big 10 (Somewhat Accurate)
+        </label><br />
         <label>
-            <input type="radio" name="question-count" value="all" checked> Full
-        </label>
+            <input type="radio" name="question-count" value="all" checked> Big 5, 10 & Facet (Most Accurate)
+        </label><br />
         <button onclick="startQuiz()">Continue</button>
     </div>
 
@@ -38,7 +38,7 @@
             <br><br>8. Governing Law: This Agreement is governed by the laws of California, USA.
         </p>
         <label for="prefix-input">Enter a 3-character prefix:</label>
-        <input type="text" id="prefix-input" maxlength="3" placeholder="ABC" style="text-transform: uppercase;">
+        <input type="text" id="prefix-input" maxlength="3" placeholder="ABC" style="text-transform: uppercase;"><br />
         <button onclick="acceptAgreement()">Accept</button>
     </div>
 
@@ -92,34 +92,44 @@
     <button id="report-issue-button">Report Issue</button>
     </main>
 
-    <!-- Final Report Section -->
-    <section id="final-report" style="display: none;">
-        <h2>Final Report</h2>
-        <div class="charts-container">
-            <div class="chart">
-                <h3>Big 5 Traits - Bar Chart</h3>
-                <canvas id="barBig5Chart"></canvas>
-            </div>
-            <div class="chart">
-                <h3>Big 10 Clusters - Bar Chart</h3>
-                <canvas id="barBig10Chart"></canvas>
-            </div>
-            <div class="chart">
-                <h3>Big 5 Traits - Pie Chart</h3>
-                <canvas id="pieBig5Chart"></canvas>
-            </div>
-            <div class="chart">
-                <h3>Big 10 Clusters - Pie Chart</h3>
-                <canvas id="pieBig10Chart"></canvas>
-            </div>
+<!-- Final Report Section -->
+<section id="final-report" style="display: none;">
+    <h2>Final Report</h2>
+    
+    <!-- Export PDF Button -->
+    <button class="button" onclick="exportToPDF()">Export Report as PDF</button>
+
+    <!-- Loading Indicator -->
+    <div id="pdf-loading" class="loading-indicator" role="alert" aria-live="assertive" style="display: none;">
+        <div class="spinner"></div>
+        <p>Generating PDF, please wait...</p>
+    </div>
+
+    <!-- Charts Container -->
+    <div class="charts-container">
+        <div class="chart">
+            <h3>Big 5 Traits - Bar Chart</h3>
+            <canvas id="barBig5Chart"></canvas>
         </div>
-        <button class="button" onclick="exportToPDF()">Export Report as PDF</button>
-        <!-- Loading Indicator -->
-        <div id="pdf-loading" class="loading-indicator" role="alert" aria-live="assertive" style="display: none;">
-            <div class="spinner"></div>
-            <p>Generating PDF, please wait...</p>
+        <div class="chart">
+            <h3>Big 10 Clusters - Bar Chart</h3>
+            <canvas id="barBig10Chart"></canvas>
         </div>
-    </section>
+        <div class="chart">
+            <h3>Big 5 Traits - Pie Chart</h3>
+            <canvas id="pieBig5Chart"></canvas>
+        </div>
+        <div class="chart">
+            <h3>Big 10 Clusters - Pie Chart</h3>
+            <canvas id="pieBig10Chart"></canvas>
+        </div>
+    </div>
+
+    <!-- Facet Scores Section -->
+    <h3>Facet Scores (Highest to Lowest):</h3>
+    <div id="facet-scores" class="facet-scores-container"></div>
+</section>
+
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js" defer></script>

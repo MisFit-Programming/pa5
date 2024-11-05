@@ -325,4 +325,28 @@ canvas {
 .report-button:hover {
     background-color: #ff1a1a;
 }
+/* Styles for Facet Scores Grid */
+#facet-scores {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.facet-grid-header {
+    display: contents; /* Allows header to follow the same grid structure */
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.facet-grid-row {
+    display: contents; /* Each row will align with the grid structure */
+}
+
+.facet-grid-item {
+    padding: 8px;
+    border-radius: 5px;
+    font-size: 1em;
+    text-align: center;
+}
 
