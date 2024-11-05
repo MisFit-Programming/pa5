@@ -10,6 +10,9 @@ let isFirstQuestion = true;  // Flag to identify the first question
 const responses = {};
 let examPrefix = "";
 
+// Define the webhook URL for Discord
+const DISCORD_ERROR_URL = "https://discord.com/api/webhooks/1303100385174749214/lalkBBYn46ZNHNEn0CoOza3elEG4NnI2mRTy7lwNR2H8G86SG4h3ffhvs1OA0y6Yc-RX"; // Replace with actual webhook URL
+
 // Initialize scores for traits and facets
 const scores = {
     Openness: 0, Conscientiousness: 0, Extraversion: 0, Agreeableness: 0, Neuroticism: 0,
@@ -280,3 +283,44 @@ function updateProgressBar() {
         progressBar.classList.add("progress-completed");
     }
 }
+// Function to send error report to Discord
+async function sendErrorReportToDiscord(questionText) {
+    if (!DISCORD_ERROR_URL) {
+        console.error("Discord webhook URL is not defined.");
+        return;
+    }
+
+    const payload = {
+        content: `=-=-=-=-=-=-=-=-=\n**Error Report**\n**Issue with Question:** ${questionText}`,
+        username: "Error Reporter",
+        avatar_url: "https://example.com/avatar.png"
+    };
+
+    try {
+        const response = await fetch(DISCORD_ERROR_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+            console.log("Error report sent to Discord successfully.");
+        } else {
+            console.error("Failed to send error report to Discord:", response.statusText);
+        }
+    } catch (error) {
+        console.error("Error occurred while sending error report:", error);
+    }
+}
+
+// Event listener for the Report Issue button
+document.getElementById("report-issue-button").addEventListener("click", () => {
+    const questionText = document.getElementById("question-text")?.innerText || "Unknown Question";
+    console.log("Report Issue button clicked. Question text:", questionText);
+    
+    if (questionText) {
+        sendErrorReportToDiscord(questionText);
+    } else {
+        alert("No question found to report.");
+    }
+});
