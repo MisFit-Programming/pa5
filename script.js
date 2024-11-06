@@ -19,7 +19,38 @@ const scores = {
     Intellect: 0, Receptivity: 0, Industriousness: 0, Orderliness: 0, Enthusiasm: 0,
     Assertiveness: 0, Compassion: 0, Politeness: 0, Volatility: 0, Withdrawal: 0
 };
-const facetScores = {}; // Track facet-level scores
+
+const facetScores = {
+    Openness: {
+        Quickness: 0, Creativity: 0, Expertise: 0, Inquisitiveness: 0, Ingenuity: 0,
+        Capability: 0, Introspection: 0, Depth: 0, Flexibility: 0, Functionality: 0,
+        "Self Awareness": 0, Fantasy: 0, Mindfulness: 0, Imagination: 0, Aesthetics: 0
+    },
+    Conscientiousness: {
+        Purposefulness: 0, Efficiency: 0, Willpower: 0, Competence: 0, Organization: 0,
+        "Achievement Striving": 0, Dutifulness: 0, Deliberation: 0, Rationality: 0,
+        Cautiousness: 0, Perfectionism: 0, Patterned: 0, Integrity: 0, Systematic: 0
+    },
+    Extraversion: {
+        Friendliness: 0, Warmth: 0, Gregariousness: 0, Poise: 0, Cheerfulness: 0,
+        "Self Disclosure": 0, Sociability: 0, Activity: 0, Talkativeness: 0, 
+        "Excitement Seeking": 0, Provocativeness: 0, Forcefulness: 0, Leadership: 0
+    },
+    Agreeableness: {
+        Caring: 0, Sympathy: 0, Understanding: 0, Empathy: 0, Altruism: 0,
+        Tenderness: 0, Utopian: 0, Trusting: 0, Modesty: 0, Straightforwardness: 0,
+        Cooperative: 0, Pleasant: 0, Compliant: 0, Moral: 0, Nurturing: 0
+    },
+    Neuroticism: {
+        "Angry Hostility": 0, "Self Consciousness": 0, Anxiety: 0, Vulnerability: 0,
+        Depression: 0, Impulsiveness: 0
+    },
+    Stability: {
+        Stability: 0, Calmness: 0, Tranquility: 0, "Impulse Control": 0, Moderation: 0,
+        Impermutability: 0, Acceptance: 0, Toughness: 0, Happiness: 0
+    }
+};
+
 
 // Initialize the app on DOM content load
 document.addEventListener('DOMContentLoaded', () => {
@@ -44,16 +75,19 @@ function showSection(sectionId) {
     });
 }
 
-// Accept the user agreement and prefix
+// Store prefix when user accepts the agreement
 function acceptAgreement() {
-    const prefixInput = document.getElementById("prefix-input").value.trim();
+    const prefixInput = document.getElementById("prefix-input").value.trim().toUpperCase();
+    
     if (prefixInput.length === 3) {
-        examPrefix = prefixInput.toUpperCase();
-        showSection("question-selection"); // Show question selection modal
+        localStorage.setItem("prefix", prefixInput); // Save the prefix
+        document.getElementById("usage-agreement").style.display = "none";
+        document.getElementById("question-selection").style.display = "block";
     } else {
         alert("Please enter a 3-character prefix.");
     }
 }
+
 
 // Function to shuffle and select questions based on user input
 function randomizeQuestions(numPerFacet) {
@@ -170,7 +204,6 @@ function saveDefaultResponse() {
     }
 }
 
-// Function to save response and update scores
 function saveResponse() {
     const question = selectedQuestions[currentQuestionIndex];
     responses[currentQuestionIndex] = selectedResponse;
@@ -182,10 +215,12 @@ function saveResponse() {
         }
     }
 
-    // Update facet scores
-    const facetName = question.facet.name;
-    if (!facetScores[facetName]) facetScores[facetName] = 0;
-    facetScores[facetName] += selectedResponse;
+    // Update facet scores by trait
+    const trait = question.trait; // Assume the question object has a `trait` property
+    const facet = question.facet.name;
+    if (facetScores[trait] && facetScores[trait][facet] !== undefined) {
+        facetScores[trait][facet] += selectedResponse;
+    }
 
     updateBig5Scores();
 
@@ -194,6 +229,7 @@ function saveResponse() {
         handleFirstAnswer();
     }
 }
+
 
 // Update the scores for Big 5 categories
 function updateBig5Scores() {
@@ -228,33 +264,54 @@ function displayFacetTotals() {
     const facetScoresContainer = document.getElementById("facet-scores");
     facetScoresContainer.innerHTML = ""; // Clear previous content
 
-    // Convert facetScores object to an array and sort by score
-    const sortedFacetScores = Object.entries(facetScores).sort((a, b) => b[1] - a[1]);
+    Object.keys(facetScores).forEach(trait => {
+        // Create a column container for each trait
+        const traitColumn = document.createElement("div");
+        traitColumn.className = `trait-column trait-${trait.toLowerCase()}`;
 
-    // Create grid header
-    const headerRow = document.createElement("div");
-    headerRow.className = "facet-grid-header";
-    headerRow.innerHTML = `
-        <div class="facet-grid-item"><strong>Facet</strong></div>
-        <div class="facet-grid-item"><strong>Score</strong></div>
-    `;
-    facetScoresContainer.appendChild(headerRow);
+        // Trait header
+        const traitHeader = document.createElement("div");
+        traitHeader.className = "trait-column-header";
+        traitHeader.textContent = trait;
+        traitColumn.appendChild(traitHeader);
 
-    // Display each facet in grid format with appropriate aspect color
-    sortedFacetScores.forEach(([facet, score]) => {
-        const facetRow = document.createElement("div");
-        facetRow.className = "facet-grid-row";
+        // Sort facets by score within each trait
+        const sortedFacets = Object.entries(facetScores[trait])
+            .map(([facet, score]) => {
+                // Ensure score is a number
+                score = typeof score === 'number' ? score : 0;
+                return { facet, score };
+            })
+            .sort((a, b) => b.score - a.score);
 
-        const aspect = findAspectForFacet(facet); // Find the aspect for the facet
-        const color = aspectColors[aspect] || "#ddd"; // Default to light gray if no color found
+        // Display each facet as a row within the column
+        sortedFacets.forEach(({ facet, score }) => {
+            const facetRow = document.createElement("div");
+            facetRow.className = "facet-row";
 
-        facetRow.innerHTML = `
-            <div class="facet-grid-item" style="background-color: ${color};">${facet}</div>
-            <div class="facet-grid-item">${score.toFixed(2)}</div>
-        `;
-        facetScoresContainer.appendChild(facetRow);
+            // Facet name
+            const facetName = document.createElement("div");
+            facetName.className = "facet-name";
+            facetName.textContent = facet;
+
+            // Facet score
+            const facetScore = document.createElement("div");
+            facetScore.className = "facet-score";
+            facetScore.textContent = score.toFixed(2);
+
+            // Append facet name and score to row, then row to column
+            facetRow.appendChild(facetName);
+            facetRow.appendChild(facetScore);
+            traitColumn.appendChild(facetRow);
+        });
+
+        // Append the trait column to the main container
+        facetScoresContainer.appendChild(traitColumn);
     });
 }
+
+
+
 
 // Helper function to find the aspect based on facet name
 function findAspectForFacet(facetName) {
@@ -312,6 +369,29 @@ async function sendErrorReportToDiscord(questionText) {
         console.error("Error occurred while sending error report:", error);
     }
 }
+// Generate the test number and current date dynamically
+function setDynamicReportData() {
+    // Retrieve the stored prefix or use "TST" as a fallback
+    const prefix = localStorage.getItem("prefix") || "TST";
+    
+    const randomDigits = Math.floor(10000000 + Math.random() * 90000000); // Generate 8 random digits
+    const testNumber = `${prefix}-${randomDigits}`;
+
+    // Format the current date as MM/DD/YYYY
+    const today = new Date();
+    const formattedDate = `${today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()}`;
+
+    // Populate test number and date in the report
+    document.getElementById("test-number").textContent = testNumber;
+    document.getElementById("test-date").textContent = formattedDate;
+}
+
+// Run function on load or when generating the report
+window.onload = setDynamicReportData;
+
+
+// Run function on load or when generating the report
+window.onload = setDynamicReportData;
 
 // Event listener for the Report Issue button
 document.getElementById("report-issue-button").addEventListener("click", () => {
@@ -323,4 +403,9 @@ document.getElementById("report-issue-button").addEventListener("click", () => {
     } else {
         alert("No question found to report.");
     }
+});
+document.addEventListener("DOMContentLoaded", () => {
+    // Populate test number and date fields if values are available
+    document.getElementById("test-number").textContent = examPrefix || "TST-0001";
+    document.getElementById("test-date").textContent = new Date().toLocaleDateString();
 });

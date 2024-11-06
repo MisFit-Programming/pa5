@@ -2,45 +2,23 @@
 const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1303100611172106252/CFpXArvyClmF_eX_UauclD2o2TXe2gGdhpbD8ikgjEzjPyxn1LfRdUdyNBvO05Auvd1X"; // Replace with your actual webhook URL
 
 async function exportToPDF() {
-    const loadingIndicator = document.getElementById("pdf-loading");
-    loadingIndicator.style.display = 'flex';
+    const reportElement = document.getElementById("final-report");
+    const options = {
+        filename: `Personality_Test_Report_${examPrefix}-${Date.now()}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+    };
 
-    const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF({
-        orientation: 'portrait',
-        unit: 'pt',
-        format: 'a4'
-    });
-
-    const examNumber = generateExamNumber();
-
-    // Title and Exam Info at the top of the PDF
-    pdf.setFontSize(22);
-    pdf.text('Big 5 Personality Test Report', pdf.internal.pageSize.width / 2, 40, { align: 'center' });
-    pdf.setFontSize(12);
-    pdf.text(`Exam Number: ${examNumber}`, pdf.internal.pageSize.width / 2, 70, { align: 'center' });
-    pdf.text(`Generated on: ${new Date().toLocaleDateString()}`, pdf.internal.pageSize.width / 2, 90, { align: 'center' });
-
-    // Add the bar charts on the first page in top-bottom layout
-    await addBarChartsToPDF(pdf);
-
-    // Add the pie charts on the second page in top-bottom layout
-    pdf.addPage();
-    await addPieChartsToPDF(pdf);
-
-    // Add sorted facet scores on a single page
-    pdf.addPage();
-    addStyledFacetScores(pdf);
-
-    // Save locally
-    pdf.save(`Personality_Test_Report_${examNumber}.pdf`);
-
-    // Upload to Discord
-    const pdfBlob = pdf.output("blob");
-    await uploadPDFToDiscord(pdfBlob, `Personality_Test_Report_${examNumber}.pdf`);
-
-    loadingIndicator.style.display = 'none';
+    // Generate PDF
+    html2pdf().set(options).from(reportElement).save();
 }
+
+
+
+
+// Remove addPieChartsToPDF function entirely if not used elsewhere
+
 
 // Function to add bar charts on the first page in a top-bottom layout
 async function addBarChartsToPDF(pdf) {
@@ -54,20 +32,6 @@ async function addBarChartsToPDF(pdf) {
 
     await addChartImageToPDF(pdf, 'barBig5Chart', (pageWidth - chartWidth) / 2, topY, chartWidth, chartHeight, "Big 5 Traits - Bar Chart");
     await addChartImageToPDF(pdf, 'barBig10Chart', (pageWidth - chartWidth) / 2, bottomY, chartWidth, chartHeight, "Big 10 Clusters - Bar Chart");
-}
-
-// Function to add pie charts on the second page in a top-bottom layout
-async function addPieChartsToPDF(pdf) {
-    const pageWidth = pdf.internal.pageSize.width;
-    const chartWidth = pageWidth * 0.8;
-    const chartHeight = chartWidth * 0.6; // Maintain aspect ratio
-
-    // Positions for top and bottom charts
-    const topY = 60; // Positioned at the top of the page
-    const bottomY = topY + chartHeight + 60; // Space between top and bottom charts
-
-    await addChartImageToPDF(pdf, 'pieBig5Chart', (pageWidth - chartWidth) / 2, topY, chartWidth, chartHeight, "Big 5 Traits - Pie Chart");
-    await addChartImageToPDF(pdf, 'pieBig10Chart', (pageWidth - chartWidth) / 2, bottomY, chartWidth, chartHeight, "Big 10 Clusters - Pie Chart");
 }
 
 // Function to add individual chart images to the PDF
