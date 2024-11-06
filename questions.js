@@ -1517,7 +1517,7 @@ const questions = [
                 "Withdrawal": 0.0
             }
         },
-        "question": "I try to understand the true motives behind my actives."
+        "question": "I try to understand the motives behind my actions."
     },
     {
         "trait": "Openness",
@@ -9737,7 +9737,7 @@ const questions = [
                 "Withdrawal": 0.0
             }
         },
-        "question": "I do my bet to be kind."
+        "question": "I do my best to be kind."
     },
     {
         "trait": "Agreeableness",
