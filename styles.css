@@ -209,12 +209,25 @@ button:hover {
     flex-basis: 70%; /* Sets the width of the charts container to 70% */
 }
 
+/* Left-align content inside report-right */
 .report-right {
     display: flex;
     flex-direction: column;
-    flex-basis: 30%; /* Sets the width of the user info container to 30% */
+    flex-basis: 30%; /* Width of the user info container */
+    text-align: left; /* Align all items in the right column to the left */
+    padding-left: 10px; /* Add left padding for separation */
 }
 
+/* Ensure all .user-info text is left-aligned */
+.user-info {
+    align-items: flex-start; /* Align items to the left */
+    padding: 0 10px; /* Add padding to the left and right if needed */
+}
+
+.user-info p {
+    text-align: left; /* Ensure each paragraph aligns left */
+    margin: 0 0 10px 0; /* Add spacing between items */
+}
 /* Ensures that each chart-container and corresponding user-info section have equal height */
 .chart-container, .user-info {
     flex: 1;
@@ -224,14 +237,62 @@ button:hover {
     align-items: center;
 }
 
+/* Styling for top-section to achieve desired layout */
+.user-info.top-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Space items apart vertically */
+    height: 100%; /* Full height to allow positioning */
+    align-items: flex-start; /* Align all items to the left */
+}
+
+/* Align photo at the top */
+.user-info .photo-placeholder {
+    align-self: flex-start;
+    margin-bottom: auto; /* Pushes other elements to the bottom */
+}
+
+/* Ensure test number and date are left-aligned */
+.user-info.top-section p {
+    align-self: flex-start; /* Aligns test number and date to the left */
+    text-align: left; /* Ensures the text within p is left-aligned */
+    margin-top: auto; /* Pushes test number and date to the bottom */
+    margin-left: 0; /* Remove any extra indentation if necessary */
+}
+
+
 /* Additional styling for top and bottom sections to center content */
 .user-info.top-section, .user-info.bottom-section {
     padding: 10px;
+    text-align: left; /* Align text to the left */
 }
 
-/* Ensures even spacing for elements within bottom-section */
+/* Styling for bottom-section to achieve top alignment */
 .user-info.bottom-section {
-    justify-content: space-evenly; /* Evenly distributes Name, Rank, Organization */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Align items to the top */
+    align-items: flex-start; /* Ensure items are aligned to the left */
+    padding: 10px;
+}
+
+/* Left-align each paragraph within bottom-section */
+.user-info.bottom-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Distribute space evenly */
+    align-items: flex-start; /* Ensure items are aligned to the left */
+    height: 100%; /* Ensure it uses full height of the container */
+    padding: 10px;
+}
+
+/* Ensure each paragraph within bottom-section is left-aligned and takes equal space */
+.user-info.bottom-section p {
+    text-align: left; /* Ensure text within p is left-aligned */
+    margin: 0; /* Remove any default margin */
+    flex: 1; /* Distribute height equally among items */
+    display: flex;
+    align-items: center; /* Center-align text vertically within each section */
 }
 
 /* Style adjustments for Photo Placeholder */
@@ -305,40 +366,87 @@ button:hover {
 }
 
 /* Trait Colors */
-.trait-openness { background-color: #fefa92; }
-.trait-conscientiousness { background-color: #80c7aa; }
-.trait-extraversion { background-color: #ffe9bc; }
-.trait-agreeableness { background-color: #bbeaff; }
-.trait-neuroticism { background-color: #e0cedd; }
-.trait-stability { background-color: #d3d3f5; }
+.trait-column.trait-openness { background-color: #fefa92 !important; }
+.trait-column.trait-conscientiousness { background-color: #80c7aa !important; }
+.trait-column.trait-extraversion { background-color: #ffe9bc !important; }
+.trait-column.trait-agreeableness { background-color: #bbeaff !important; }
+.trait-column.trait-neuroticism { background-color: #e0cedd !important; }
+.trait-column.trait-stability { background-color: #d3d3f5 !important; }
 
-/* Compact View for Print/PDF */
-@media print, .pdf-export {
-    #final-report {
-        padding: 5px;
-        width: 100%;
-        box-shadow: none;
-        border: none;
-    }
-    .button, #export-button-text { display: none !important; }
-    body, .trait-column-header, .facet-row, #final-report, .report-left, .report-right {
-        font-size: 75%;
+/* Print-Only Styles for Compact Layout */
+@media print {
+    /* Remove default body margins/padding to avoid any additional space */
+    body {
         margin: 0;
         padding: 0;
+        background-color: white !important; /* Ensure the background is fully white */
     }
-    #facet-scores {
-        grid-template-columns: repeat(5, 1fr);
-        gap: 3px;
-        padding: 5px;
+    .button {
+        display: none !important;
     }
-    .trait-column { padding: 3px; text-align: center; }
-    .trait-column-header { font-size: 0.9em; margin-bottom: 3px; }
-    .facet-row { padding: 2px 0; font-size: 0.85em; }
-    .final-report-container {
-        display: flex;
-        gap: 5px;
+    .report-right {
+        text-align: left !important;
+        padding-left: 10px !important; /* Reinforce padding */
+    }
+    
+    .user-info {
+        align-items: flex-start !important;
+    }
+    
+    .user-info p {
+        text-align: left !important;
+        margin: 0 0 10px 0 !important;
+    }
+    .chart-container canvas {
+        width: 100% !important;
+        height: 360px !important; /* Set your desired height */
+        }
+
+    /* Ensure each chart container uses full width */
+    .chart-container {
+        width: 100% !important;
+        max-width: none !important;
+        max-height: none !important;
         padding: 0;
+        margin: 0;
+        box-sizing: border-box;
     }
-    .report-right { padding-left: 5px; width: 40%; }
-    .report-left { width: 55%; }
+    /* Full-page styling for the final report */
+    #final-report {
+        display: block !important;
+        max-width: none;
+        width: 100% !important; /* Span the full page width */
+        max-height: none !important;
+        height: auto; /* Allow content to determine height */
+        margin: 0 !important;
+        padding: 0.5in !important; /* Adjust as needed */
+        box-sizing: border-box;
+        font-size: 1em;
+        line-height: 1.2;
+    }
+
+    /* Ensure that internal containers don't restrict the layout */
+    .final-report-container, .report-left, .report-right, #facet-scores, .trait-column {
+        width: 100% !important;
+        max-width: none !important;
+        max-height: none !important;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    /* Make sure trait columns use full width and allow wrapping */
+    .trait-column {   
+        display: inline-block;
+        width: calc(100% / 3); /* Three columns per row */
+        vertical-align: top;
+        padding: 0.2in;
+    }
+    /* Re-enforce in print specifically */
+    .trait-column.trait-openness { background-color: #fefa92 !important; }
+    .trait-column.trait-conscientiousness { background-color: #80c7aa !important; }
+    .trait-column.trait-extraversion { background-color: #ffe9bc !important; }
+    .trait-column.trait-agreeableness { background-color: #bbeaff !important; }
+    .trait-column.trait-neuroticism { background-color: #e0cedd !important; }
+    .trait-column.trait-stability { background-color: #d3d3f5 !important; }
 }

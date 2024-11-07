@@ -76,6 +76,7 @@ function initializeApp() {
     showSection("usage-agreement");
 }
 
+
 // Function to show a specific section and hide others
 function showSection(sectionId) {
     const sections = ["usage-agreement", "question-selection", "test-section", "final-report", "score-header"];
@@ -292,10 +293,23 @@ function displayFacetTotals() {
     const facetScoresContainer = document.getElementById("facet-scores");
     facetScoresContainer.innerHTML = ""; // Clear previous content
 
+    // Define color mapping directly within the function for use in inline styling
+    const traitColors = {
+        Openness: "#fefa92",
+        Conscientiousness: "#80c7aa",
+        Extraversion: "#ffe9bc",
+        Agreeableness: "#bbeaff",
+        Neuroticism: "#e0cedd",
+        Stability: "#d3d3f5"
+    };
+
     Object.keys(facetScores).forEach(trait => {
         // Create a column container for each trait
         const traitColumn = document.createElement("div");
         traitColumn.className = `trait-column trait-${trait.toLowerCase()}`;
+        
+        // Apply the background color inline
+        traitColumn.style.backgroundColor = traitColors[trait] || "#ffffff"; // Default to white if color is not found
 
         // Trait header
         const traitHeader = document.createElement("div");

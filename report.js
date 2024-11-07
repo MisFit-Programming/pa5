@@ -6,12 +6,29 @@ let pieBig10ChartInstance = null;
 
 // Display the final report and render all charts
 function showFinalReport() {
+    const finalReport = document.getElementById("final-report");
+
     document.getElementById("test-section").style.display = "none";
     document.getElementById("score-header").style.display = "none";
-    document.getElementById("final-report").style.display = "block";
+
+    // Show and render the report, with pdf export class added for consistent layout
+    finalReport.classList.add("pdf-export");
+    finalReport.style.display = "block";
+
+    // Render charts and facet scores
     renderAllCharts();
-    renderGroupedFacetScores()
+    renderGroupedFacetScores();
+
+    // Log content to check if it’s being populated
+    setTimeout(() => {
+        console.log("Final Report InnerHTML:", finalReport.innerHTML);
+        
+        // Remove the pdf-export class after rendering for print preview consistency
+        finalReport.classList.remove("pdf-export");
+    }, 1000); // Adding a 1-second delay to ensure content loads before logging
 }
+
+
 
 // Define colors for Big 5 traits and their respective Big 10 aspects
 const traitColors = {
@@ -74,16 +91,29 @@ function createBarChart(chartId, labels, data, title, colors) {
             maintainAspectRatio: true,
             aspectRatio: 2,
             scales: {
+                x: {
+                    display: true, // Display x-axis
+                    ticks: {
+                        display: true,
+                        autoSkip: false, // Prevent skipping labels
+                        maxRotation: 90, // Ensures label rotation
+                        minRotation: 90, // Set minimum rotation to 90 degrees
+                        align: 'start', // Align labels to the start of each bar for better readability
+                    }},
                 y: {
+                    display: true, // Hide y-axis labels
                     beginAtZero: true
                 }
             },
             plugins: {
                 title: {
-                    display: false  // Hide the chart title
+                    display: false // Hide the chart title
                 },
                 legend: {
-                    display: false  // Hide the legend
+                    display: false // Hide the legend
+                },
+                tooltip: {
+                    enabled: false // Disable tooltips for a cleaner look
                 }
             }
         }
@@ -104,35 +134,90 @@ function getCanvasContext(canvasId) {
 
 async function renderGroupedFacetScores() {
     const container = document.getElementById("facet-scores");
-    container.innerHTML = ""; // Clear previous content
+    container.innerHTML = "";
 
-    // Loop through each trait and its facets
     Object.keys(facetScores).forEach(trait => {
-        // Create a header for each trait
-        const traitHeader = document.createElement("div");
-        traitHeader.className = "facet-grid-header";
-        traitHeader.innerHTML = `<strong>${trait}</strong>`;
-        container.appendChild(traitHeader);
+        const sortedFacets = Object.entries(facetScores[trait])
+            .sort(([, scoreA], [, scoreB]) => scoreB - scoreA);  // Sort descending by score
 
-        // Render each facet under the current trait
-        Object.keys(facetScores[trait]).forEach(facet => {
+        sortedFacets.forEach(([facet, score]) => {
             const facetRow = document.createElement("div");
             facetRow.className = "facet-grid-row";
-
-            // Create and style the facet name and score cells
-            const facetName = document.createElement("div");
-            facetName.className = "facet-grid-item";
-            facetName.textContent = facet;
-            facetName.style.backgroundColor = traitColors[trait]; // Use existing color mapping
-
-            const facetScore = document.createElement("div");
-            facetScore.className = "facet-grid-item";
-            facetScore.textContent = facetScores[trait][facet].toFixed(2);
-
-            // Append cells to row, then add row to container
-            facetRow.appendChild(facetName);
-            facetRow.appendChild(facetScore);
+            facetRow.innerHTML = `<div class="facet-name">${facet}</div>
+                                  <div class="facet-score">${score.toFixed(2)}</div>`;
             container.appendChild(facetRow);
         });
     });
+}
+
+function printFinalReport() {
+    const finalReport = document.getElementById("final-report");
+
+    // Log content before printing to verify it exists
+    console.log("Final Report Content for Printing:", finalReport.innerHTML);
+
+    if (!finalReport || finalReport.innerHTML.trim() === "") {
+        console.error("Final report content is missing or not rendered.");
+        alert("The final report content is missing. Please ensure it is generated before printing.");
+        return;
+    }
+
+    // Open a new window for printing
+    const printWindow = window.open("", "_blank");
+
+    // Write the full HTML structure into the new window
+    printWindow.document.write(`
+        <html>
+            <head>
+                <title>Final Report</title>
+                <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+                <style>
+                    body {
+                        margin: 0;
+                        padding: 0;
+                        font-family: 'Roboto', sans-serif;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                    }
+                    #final-report {
+                        display: block;
+                        width: 8.5in;
+                        max-width: 100%;
+                        padding: 0.5in;
+                        font-size: 0.9em;
+                        line-height: 1.2;
+                        box-sizing: border-box;
+                    }
+                    .trait-column, .user-info, .facet-row, .chart-container {
+                        padding: 4px;
+                        margin: 0;
+                    }
+                    /* Ensure the progress bar fits */
+                    #progress-bar {
+                        width: 100%;
+                        height: 10px;
+                    }
+                    /* Prevent page breaks in key sections */
+                    .trait-column {
+                        page-break-inside: avoid;
+                    }
+                </style>
+            </head>
+            <body>
+                <div id="final-report">
+                    ${finalReport.innerHTML}
+                </div>
+            </body>
+        </html>
+    `);
+
+    printWindow.document.close();
+
+    // Add a small delay before printing to ensure content is fully rendered
+    setTimeout(() => {
+        printWindow.focus();
+        printWindow.print();
+        printWindow.close();
+    }, 500);
 }
