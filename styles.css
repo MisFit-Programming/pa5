@@ -406,7 +406,7 @@ button:hover {
     padding: 0 5px;
 }
 
-/* Background colors for each trait */
+/* Default facet background colors */
 .trait-openness { background-color: #fefa92; }
 .trait-conscientiousness { background-color: #80c7aa; }
 .trait-extraversion { background-color: #ffe9bc; }
@@ -414,24 +414,84 @@ button:hover {
 .trait-neuroticism { background-color: #e0cedd; }
 .trait-stability { background-color: #d3d3f5; }
 
-/* Responsive Design Adjustments */
-@media (max-width: 768px) {
-    body {
-        font-size: 14px;
+/* Stacking Neuroticism and Stability columns */
+.trait-neuroticism { grid-column: span 2; }
+.trait-stability { grid-column: span 2; }
+
+@media print, .pdf-export {
+    /* Final Report adjustments for compact layout */
+    #final-report {
+        padding: 5px;
+        width: 100%;
+        box-shadow: none;
+        border: none;
     }
-    header {
-        padding: 0.8em;
-        font-size: 1.2em;
+
+    /* Hide export button */
+    .button, #export-button-text {
+        display: none !important;
     }
-    .navigation-buttons {
-        flex-direction: column;
-        gap: 10px;
+
+    /* Compact font and layout for body and other sections */
+    body, .trait-column-header, .facet-row, #final-report, .report-left, .report-right {
+        font-size: 75%;
+        margin: 0;
+        padding: 0;
     }
-    canvas {
-        width: 100% !important;
-        height: auto !important;
+
+    /* Fit facet scores into a single page */
+    #facet-scores {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 3px;
+        padding: 5px;
     }
-        #facet-scores {
-        grid-template-columns: 1fr; /* Stacks the grid columns on mobile */
+
+    /* Trait Column adjustments for compact view */
+    .trait-column {
+        border: none;
+        padding: 3px;
+        text-align: center;
     }
+
+    .trait-column-header {
+        font-size: 0.9em;
+        margin-bottom: 3px;
+    }
+
+    /* Minimized spacing in facet rows */
+    .facet-row {
+        padding: 2px 0;
+        font-size: 0.85em;
+    }
+
+    /* Layout adjustments for charts and user info */
+    .final-report-container {
+        display: flex;
+        justify-content: space-between;
+        flex-direction: row;
+        align-items: flex-start;
+        padding: 0;
+        gap: 5px;
+    }
+
+    /* Align user info on the right side */
+    .report-right {
+        text-align: left;
+        padding-left: 5px;
+        width: 40%;
+    }
+
+    /* Give charts more width on the left side */
+    .report-left {
+        width: 55%;
+    }
+
+    /* Ensure specific facet colors in PDF export */
+    .trait-openness { background-color: #fefa92; }
+    .trait-conscientiousness { background-color: #80c7aa; }
+    .trait-extraversion { background-color: #ffe9bc; }
+    .trait-agreeableness { background-color: #bbeaff; }
+    .trait-neuroticism { background-color: #e0cedd; grid-column: span 2; } /* Stacked */
+    .trait-stability { background-color: #d3d3f5; grid-column: span 2; } /* Stacked */
 }

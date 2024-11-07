@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PersonaMap</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js" defer></script>
 </head>
 <body>
     <!-- Question Selection Modal -->
@@ -133,34 +132,8 @@
     </div>
 
     <!-- Facet Scores Section below -->
-<h3>Facet Scores (Highest to Lowest):</h3>
-<div id="facet-scores" class="facet-scores-container">
-    <div class="trait-column trait-openness">
-        <div class="trait-column-header">Openness</div>
-        <!-- Facets for Openness go here -->
-    </div>
-    <div class="trait-column trait-conscientiousness">
-        <div class="trait-column-header">Conscientiousness</div>
-        <!-- Facets for Conscientiousness go here -->
-    </div>
-    <div class="trait-column trait-extraversion">
-        <div class="trait-column-header">Extraversion</div>
-        <!-- Facets for Extraversion go here -->
-    </div>
-    <div class="trait-column trait-agreeableness">
-        <div class="trait-column-header">Agreeableness</div>
-        <!-- Facets for Agreeableness go here -->
-    </div>
-    <div class="trait-column trait-neuroticism">
-        <div class="trait-column-header">Neuroticism</div>
-        <!-- Facets for Neuroticism go here -->
-    </div>
-    <div class="trait-column trait-stability">
-        <div class="trait-column-header">Stability</div>
-        <!-- Facets for Stability go here -->
-    </div>
-</div>
-
+    <h3>Facet Scores (Highest to Lowest):</h3>
+    <div id="facet-scores" class="facet-scores-container"></div>
 </section>
 
 
@@ -168,15 +141,21 @@
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js" defer></script>
-    <script src="questions.js" defer></script>
+    <!-- Load html2pdf and jsPDF without defer to ensure exportPDF.js has access to them -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="Small_Questions.js" defer></script>
+    <script src="Medium_Questions.js" defer></script>
+    <script src="Full_Questions.js" defer></script>
     <script src="questionSelection.js" defer></script>
     <script src="quiz.js" defer></script>
     <script src="report.js" defer></script>
-    <script src="exportPDF.js" defer></script>
+    <!-- Load exportPDF.js after jsPDF and html2pdf are loaded -->
+    <script src="exportPDF.js"></script>
     <!-- Ensure `script.js` is loaded last for global functionality -->
     <script src="script.js" defer></script>
+
 
 </body>
 </html>
