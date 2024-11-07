@@ -17,8 +17,8 @@
     --selected-border: #388E3C;
 }
 
-/* Hide all sections by default to ensure they only appear when triggered by JavaScript */
-#usage-agreement, #question-selection, #test-section, #final-report {
+/* Hide all sections by default */
+.hidden {
     display: none;
 }
 
@@ -34,39 +34,22 @@ body {
     overflow-x: hidden;
 }
 
-/* Section Visibility Management */
-#usage-agreement {
-    display: flex; /* Only the usage agreement modal is visible initially */
-}
-#question-selection, #test-section, #final-report {
-    display: none; /* Hide other sections initially */
-}
-
 /* Header Styling */
-header {
+header, #score-header {
     background-color: var(--primary-color);
     color: white;
     padding: 1em 0;
-    border-bottom: 2px solid var(--selected-border);
+    font-size: 1.5em;
     width: 100%;
+    text-align: center;
     display: flex;
     justify-content: center;
     align-items: center;
     box-sizing: border-box;
-    font-size: 1.5em;
-    position: relative;
+    border-bottom: 2px solid var(--selected-border);
     z-index: 100;
 }
-#score-header {
-    background-color: var(--primary-color);
-    color: white;
-    padding: 1em 0;
-    font-size: 1.5em;
-    text-align: center;
-    display: none; /* Initially hidden, shown when the test starts */
-    width: 100%; /* Ensures it spans the full width */
-    box-sizing: border-box; /* Includes padding in width calculation */
-}
+#score-header { display: none; }
 
 /* Test Section Styling */
 #test-section {
@@ -112,17 +95,16 @@ header {
     gap: 10px;
 }
 
-/* Individual Labels for Likert Scale */
 .likert-bar label {
     font-weight: bold;
     color: var(--text-color);
     font-size: 0.9em;
-    width: 20%; /* Ensures even spacing */
+    width: 20%;
     text-align: center;
     margin: 0;
 }
 
-/* Style for each Likert segment */
+/* Likert Segment */
 .bar-segment {
     display: inline-flex;
     align-items: center;
@@ -137,7 +119,7 @@ header {
 }
 
 /* Color assignments for each segment */
-.bar-segment[data-value="-2"] { background-color: #e57373; } /* Slightly darker for contrast */
+.bar-segment[data-value="-2"] { background-color: #e57373; }
 .bar-segment[data-value="-1"] { background-color: #ff8a80; }
 .bar-segment[data-value="0"] { background-color: #cccccc; color: #333; }
 .bar-segment[data-value="1"] { background-color: #66bb6a; }
@@ -145,7 +127,7 @@ header {
 
 .bar-segment.selected {
     border: 2px solid var(--selected-border);
-    transform: scale(1.05); /* Small scale effect to emphasize selection */
+    transform: scale(1.05);
 }
 
 /* Timer Styling */
@@ -154,15 +136,7 @@ header {
     margin: 10px 0;
     font-weight: bold;
     color: var(--highlight-color);
-    transition: color 0.5s ease; /* Smooth color transition */
-}
-
-/* Navigation Buttons Styling */
-.navigation-buttons {
-    display: flex;
-    gap: 1em;
-    justify-content: center;
-    margin-top: 1em;
+    transition: color 0.5s ease;
 }
 
 /* Button Styling */
@@ -176,7 +150,6 @@ button {
     color: white;
     transition: background-color 0.3s ease;
 }
-
 button:hover {
     background-color: var(--button-hover);
 }
@@ -200,18 +173,8 @@ button:hover {
     z-index: 1000;
     box-sizing: border-box;
 }
-
-.modal h2 {
-    font-size: 1.8em;
-    margin-bottom: 1em;
-}
-
-.modal p {
-    font-size: 1em;
-    margin-bottom: 1.5em;
-    line-height: 1.4;
-}
-
+.modal h2 { font-size: 1.8em; margin-bottom: 1em; }
+.modal p { font-size: 1em; margin-bottom: 1.5em; line-height: 1.4; }
 .modal button {
     width: 80%;
     max-width: 300px;
@@ -227,42 +190,53 @@ button:hover {
     background-color: white;
     margin: 1em auto;
     width: 90%;
-    max-width: 800px; /* Fit within an 8.5" width */
+    max-width: 800px;
     border: 1px solid #ddd;
     border-radius: 8px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Layout for the charts and user info */
+/* Final Report Layout */
 .final-report-container {
     display: flex;
     gap: 20px;
+    height: 100%;
 }
 
 .report-left {
-    flex: 7; /* 70% width */
+    display: flex;
+    flex-direction: column;
+    flex-basis: 70%; /* Sets the width of the charts container to 70% */
 }
 
 .report-right {
-    flex: 3; /* 30% width */
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    flex-basis: 30%; /* Sets the width of the user info container to 30% */
 }
 
-.chart-container {
-    width: 100%;
-    max-width: 350px;
-    margin: 0 auto;
-    box-sizing: border-box;
+/* Ensures that each chart-container and corresponding user-info section have equal height */
+.chart-container, .user-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
-.user-info {
-    text-align: left;
+/* Additional styling for top and bottom sections to center content */
+.user-info.top-section, .user-info.bottom-section {
+    padding: 10px;
 }
 
+/* Ensures even spacing for elements within bottom-section */
+.user-info.bottom-section {
+    justify-content: space-evenly; /* Evenly distributes Name, Rank, Organization */
+}
+
+/* Style adjustments for Photo Placeholder */
 .photo-placeholder {
-    height: 180px; /* Increase photo box height */
+    height: 180px;
     width: 100%;
     background-color: #e0e0e0;
     text-align: center;
@@ -273,23 +247,7 @@ button:hover {
     border-radius: 5px;
 }
 
-/* Button styling in report */
-.report-button {
-    background-color: #ff4d4d;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.report-button:hover {
-    background-color: #ff1a1a;
-}
-
-/* Progress Bar Container */
+/* Progress Bar */
 .progress-container {
     width: 80%;
     height: 20px;
@@ -299,11 +257,9 @@ button:hover {
     box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.2);
     overflow: hidden;
 }
-
-/* Progress Bar itself */
 #progress-bar {
     height: 100%;
-    width: 0%; /* Initial width of 0% */
+    width: 0%;
     background-color: #ff4d4d;
     border-radius: 10px 0 0 10px;
     transition: width 0.3s ease, background-color 0.3s ease;
@@ -312,9 +268,13 @@ button:hover {
 /* Facet Scores Grid */
 #facet-scores {
     display: grid;
-    grid-template-columns: repeat(5, 1fr); /* Five columns across */
-    gap: 10px;
+    grid-template-columns: repeat(3, 1fr); /* Three columns */
+    grid-template-rows: repeat(2, auto);   /* Two rows, auto-sized */
+    gap: 20px;
     padding: 20px;
+    width: 100%;
+    max-width: 800px; /* Adjust as needed to fit within your layout */
+    margin: 0 auto;
 }
 
 /* Trait Column Styling */
@@ -324,89 +284,27 @@ button:hover {
     padding: 10px;
     text-align: center;
 }
-
-/* Trait Column Header */
 .trait-column-header {
     font-weight: bold;
     font-size: 1.2em;
     margin-bottom: 10px;
-    text-align: center;
     color: #333;
     padding: 5px;
     border-radius: 4px;
 }
-
-/* Alternating Row Colors within Each Column */
 .facet-row {
     display: flex;
-    justify-content: space-between; /* Distribute items left and right */
+    justify-content: space-between;
     padding: 5px 0;
     border-bottom: 1px solid #ccc;
 }
 
-/* Darker shade for odd rows */
+/* Alternating Row Colors */
 .trait-column .facet-row:nth-child(odd) {
-    background-color: rgba(0, 0, 0, 0.05); /* Lightened version of the background */
+    background-color: rgba(0, 0, 0, 0.05);
 }
 
-/* Specific Colors for Each Trait */
-.trait-openness {
-    background-color: #fefa92; /* Light yellow */
-}
-.trait-openness .facet-row:nth-child(odd) {
-    background-color: #f7e883; /* Slightly darker */
-}
-
-.trait-conscientiousness {
-    background-color: #80c7aa; /* Light green */
-}
-.trait-conscientiousness .facet-row:nth-child(odd) {
-    background-color: #6fa893; /* Slightly darker */
-}
-
-.trait-extraversion {
-    background-color: #ffe9bc; /* Light peach */
-}
-.trait-extraversion .facet-row:nth-child(odd) {
-    background-color: #ffd9a3; /* Slightly darker */
-}
-
-.trait-agreeableness {
-    background-color: #bbeaff; /* Light blue */
-}
-.trait-agreeableness .facet-row:nth-child(odd) {
-    background-color: #a3d9f5; /* Slightly darker */
-}
-
-.trait-neuroticism {
-    background-color: #e0cedd; /* Light purple */
-}
-.trait-neuroticism .facet-row:nth-child(odd) {
-    background-color: #d3b8cc; /* Slightly darker */
-}
-
-.trait-stability {
-    background-color: #d3d3f5; /* Light lavender */
-}
-.trait-stability .facet-row:nth-child(odd) {
-    background-color: #c2c2e1; /* Slightly darker */
-}
-/* Stacking Neuroticism and Stability columns */
-.trait-neuroticism {
-    grid-column: span 2;
-}
-.trait-stability {
-    grid-column: span 2;
-}
-
-
-.facet-name, .facet-score {
-    flex: 1;
-    text-align: left;
-    padding: 0 5px;
-}
-
-/* Default facet background colors */
+/* Trait Colors */
 .trait-openness { background-color: #fefa92; }
 .trait-conscientiousness { background-color: #80c7aa; }
 .trait-extraversion { background-color: #ffe9bc; }
@@ -414,84 +312,33 @@ button:hover {
 .trait-neuroticism { background-color: #e0cedd; }
 .trait-stability { background-color: #d3d3f5; }
 
-/* Stacking Neuroticism and Stability columns */
-.trait-neuroticism { grid-column: span 2; }
-.trait-stability { grid-column: span 2; }
-
+/* Compact View for Print/PDF */
 @media print, .pdf-export {
-    /* Final Report adjustments for compact layout */
     #final-report {
         padding: 5px;
         width: 100%;
         box-shadow: none;
         border: none;
     }
-
-    /* Hide export button */
-    .button, #export-button-text {
-        display: none !important;
-    }
-
-    /* Compact font and layout for body and other sections */
+    .button, #export-button-text { display: none !important; }
     body, .trait-column-header, .facet-row, #final-report, .report-left, .report-right {
         font-size: 75%;
         margin: 0;
         padding: 0;
     }
-
-    /* Fit facet scores into a single page */
     #facet-scores {
-        display: grid;
         grid-template-columns: repeat(5, 1fr);
         gap: 3px;
         padding: 5px;
     }
-
-    /* Trait Column adjustments for compact view */
-    .trait-column {
-        border: none;
-        padding: 3px;
-        text-align: center;
-    }
-
-    .trait-column-header {
-        font-size: 0.9em;
-        margin-bottom: 3px;
-    }
-
-    /* Minimized spacing in facet rows */
-    .facet-row {
-        padding: 2px 0;
-        font-size: 0.85em;
-    }
-
-    /* Layout adjustments for charts and user info */
+    .trait-column { padding: 3px; text-align: center; }
+    .trait-column-header { font-size: 0.9em; margin-bottom: 3px; }
+    .facet-row { padding: 2px 0; font-size: 0.85em; }
     .final-report-container {
         display: flex;
-        justify-content: space-between;
-        flex-direction: row;
-        align-items: flex-start;
-        padding: 0;
         gap: 5px;
+        padding: 0;
     }
-
-    /* Align user info on the right side */
-    .report-right {
-        text-align: left;
-        padding-left: 5px;
-        width: 40%;
-    }
-
-    /* Give charts more width on the left side */
-    .report-left {
-        width: 55%;
-    }
-
-    /* Ensure specific facet colors in PDF export */
-    .trait-openness { background-color: #fefa92; }
-    .trait-conscientiousness { background-color: #80c7aa; }
-    .trait-extraversion { background-color: #ffe9bc; }
-    .trait-agreeableness { background-color: #bbeaff; }
-    .trait-neuroticism { background-color: #e0cedd; grid-column: span 2; } /* Stacked */
-    .trait-stability { background-color: #d3d3f5; grid-column: span 2; } /* Stacked */
+    .report-right { padding-left: 5px; width: 40%; }
+    .report-left { width: 55%; }
 }

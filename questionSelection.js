@@ -7,29 +7,27 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Function to start the quiz after the user selects a question count
-// After selecting the question set, initialize the quiz correctly
 function startQuiz() {
     selectedQuestionCount = document.querySelector('input[name="question-count"]:checked').value;
 
-    // Assign the appropriate question set based on selection
     switch (selectedQuestionCount) {
         case '1':
-            questions = smallQuestions; // Use from Small_Questions.js
+            questions = smallQuestions;
             break;
         case '2':
-            questions = mediumQuestions; // Use from Medium_Questions.js
+            questions = mediumQuestions;
             break;
         case 'all':
-            questions = fullQuestions; // Use from Full_Questions.js
+            questions = fullQuestions;
             break;
         default:
             console.error("Invalid selection");
             return;
     }
 
-    // Call initializeQuiz to start the quiz after questions are assigned
     initializeQuiz();
 }
+
 
 
 

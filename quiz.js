@@ -21,6 +21,7 @@ function displayQuestion() {
 }
 
 
+
 function setupLikertListeners() {
     //console.log("Setting up Likert listeners"); // Should log only once
     document.querySelectorAll('.bar-segment').forEach(segment => {
@@ -53,7 +54,7 @@ document.querySelectorAll('.bar-segment').forEach(segment => {
 });
 
 function autoAdvance() {
-    if (currentQuestionIndex < selectedQuestions.length - 1) {
+    if (currentQuestionIndex < questions.length - 1) {
         currentQuestionIndex++;
         displayQuestion();
     } else {

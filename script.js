@@ -107,7 +107,7 @@ function randomizeQuestions(numPerFacet) {
         facets[q.facet.name].push(q);
     });
 
-    selectedQuestions = Object.values(facets).flatMap(facetQuestions => 
+    questions = Object.values(facets).flatMap(facetQuestions => 
         shuffleArray(facetQuestions).slice(0, numPerFacet === "all" ? facetQuestions.length : numPerFacet)
     );
 
