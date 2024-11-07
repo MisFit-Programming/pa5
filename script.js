@@ -24,7 +24,7 @@ const facetScores = {
     Openness: {
         Quickness: 0, Creativity: 0, Expertise: 0, Inquisitiveness: 0, Ingenuity: 0,
         Capability: 0, Introspection: 0, Depth: 0, Flexibility: 0, Functionality: 0,
-        "Self Awareness": 0, Fantasy: 0, Mindfulness: 0, Imagination: 0, Aesthetics: 0
+        "Self-Awareness": 0, Fantasy: 0, Mindfulness: 0, Imagination: 0, Aesthetics: 0
     },
     Conscientiousness: {
         Purposefulness: 0, Efficiency: 0, Willpower: 0, Competence: 0, Organization: 0,
@@ -33,22 +33,36 @@ const facetScores = {
     },
     Extraversion: {
         Friendliness: 0, Warmth: 0, Gregariousness: 0, Poise: 0, Cheerfulness: 0,
-        "Self Disclosure": 0, Sociability: 0, Activity: 0, Talkativeness: 0, 
-        "Excitement Seeking": 0, Provocativeness: 0, Forcefulness: 0, Leadership: 0
+        "Self-Disclosure": 0, Sociability: 0, Activity: 0, Talkativeness: 0, 
+        "Excitement Seeking": 0, Provocativeness: 0, Forcefullness: 0, Leadership: 0
     },
     Agreeableness: {
         Caring: 0, Sympathy: 0, Understanding: 0, Empathy: 0, Altruism: 0,
         Tenderness: 0, Utopian: 0, Trusting: 0, Modesty: 0, Straightforwardness: 0,
-        Cooperative: 0, Pleasant: 0, Compliant: 0, Moral: 0, Nurturing: 0
+        Cooperative: 0, Pleasant: 0, Compliant: 0, Moral: 0, Nuturing: 0
     },
     Neuroticism: {
-        "Angry Hostility": 0, "Self Consciousness": 0, Anxiety: 0, Vulnerability: 0,
+        "Angry Hostility": 0, "Self-Consciousness": 0, Anxiety: 0, Vulnerability: 0,
         Depression: 0, Impulsiveness: 0
     },
     Stability: {
-        Stability: 0, Calmness: 0, Tranquility: 0, "Impulse Control": 0, Moderation: 0,
-        Impermutability: 0, Acceptance: 0, Toughness: 0, Happiness: 0
+        Stability: 0, Calmness: 0, Tranquility: 0, "Impulse control": 0, Moderation: 0,
+        Imperturbability: 0, Acceptance: 0, Toughness: 0, Happiness: 0
     }
+};
+
+
+const facetTraitMapping = {
+    Stability: "Stability",
+    Calmness: "Stability",
+    Tranquility: "Stability",
+    "Impulse control": "Stability",
+    Moderation: "Stability",
+    Imperturbability: "Stability",
+    Acceptance: "Stability",
+    Toughness: "Stability",
+    Happiness: "Stability",
+    // Other facets follow their natural trait; e.g., Quickness belongs to Openness, etc.
 };
 
 
@@ -58,11 +72,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function initializeApp() {
-    if (!questions || !Array.isArray(questions) || questions.length === 0) {
-        console.error("Questions are not defined or empty.");
-        alert("Failed to load questions. Please reload the page.");
-        return;
-    }
     // Show only the usage agreement initially
     showSection("usage-agreement");
 }
@@ -204,31 +213,60 @@ function saveDefaultResponse() {
     }
 }
 
+// Function to log and compare current facet names with the defined facetScores structure
+function logFacetScores() {
+    console.log(`\n--- Facet Name Comparison after Question ${currentQuestionIndex + 1} ---`);
+    
+    selectedQuestions.forEach((question, index) => {
+        const trait = question.trait;
+        const facetNameFromQuestion = question.facet.name.trim(); // Get and trim facet name from questions
+        const facetExistsInScores = facetScores[trait] && facetScores[trait][facetNameFromQuestion] !== undefined;
+
+        // Log each comparison to check for mismatches
+        if (facetExistsInScores) {
+            console.log(`Match: Question ${index + 1} - Trait: ${trait}, Facet: "${facetNameFromQuestion}"`);
+        } else {
+            console.warn(`Mismatch or Missing: Question ${index + 1} - Trait: ${trait}, Facet: "${facetNameFromQuestion}" not found in facetScores`);
+        }
+    });
+    
+    console.log("\n--- End of Comparison ---\n");
+}
+
+
 function saveResponse() {
     const question = selectedQuestions[currentQuestionIndex];
     responses[currentQuestionIndex] = selectedResponse;
 
-    // Update trait and facet scores
+    // Update trait scores based on aspect scores
     for (const [aspect, baseScore] of Object.entries(question.facet.scores)) {
         if (scores[aspect] !== undefined) {
             scores[aspect] += baseScore * selectedResponse;
         }
     }
 
+    // Determine the trait in facetScores to update based on facetTraitMapping
+    const trait = question.trait;
+    const facetName = question.facet.name.trim(); // Ensure consistent naming with trim
+    const targetTrait = facetTraitMapping[facetName] || trait;  // Use mapped trait if it exists
+
     // Update facet scores by trait
-    const trait = question.trait; // Assume the question object has a `trait` property
-    const facet = question.facet.name;
-    if (facetScores[trait] && facetScores[trait][facet] !== undefined) {
-        facetScores[trait][facet] += selectedResponse;
+    if (facetScores[targetTrait] && facetScores[targetTrait][facetName] !== undefined) {
+        facetScores[targetTrait][facetName] += selectedResponse;
+        //console.log(`Updated ${targetTrait} - ${facetName}: ${facetScores[targetTrait][facetName]}`);
+    } else {
+        console.warn(`Facet "${facetName}" under trait "${trait}" not found in facetScores.`);
     }
 
+    // Update Big 5 scores
     updateBig5Scores();
 
-    // If this was the first question, handle the first answer logic
+    // Handle first answer logic if necessary
     if (isFirstQuestion) {
         handleFirstAnswer();
     }
 }
+
 
 
 // Update the scores for Big 5 categories
@@ -259,7 +297,6 @@ function showFinalReport() {
     displayFacetTotals();
 }
 
-// Display facet totals in a grid format in the final report, sorted by highest to lowest
 function displayFacetTotals() {
     const facetScoresContainer = document.getElementById("facet-scores");
     facetScoresContainer.innerHTML = ""; // Clear previous content
@@ -275,14 +312,10 @@ function displayFacetTotals() {
         traitHeader.textContent = trait;
         traitColumn.appendChild(traitHeader);
 
-        // Sort facets by score within each trait
+        // Sort facets by score within each trait and include zero scores
         const sortedFacets = Object.entries(facetScores[trait])
-            .map(([facet, score]) => {
-                // Ensure score is a number
-                score = typeof score === 'number' ? score : 0;
-                return { facet, score };
-            })
-            .sort((a, b) => b.score - a.score);
+            .map(([facet, score]) => ({ facet, score })) // Map all entries, including zeros
+            .sort((a, b) => b.score - a.score); // Sort in descending order
 
         // Display each facet as a row within the column
         sortedFacets.forEach(({ facet, score }) => {
@@ -297,7 +330,7 @@ function displayFacetTotals() {
             // Facet score
             const facetScore = document.createElement("div");
             facetScore.className = "facet-score";
-            facetScore.textContent = score.toFixed(2);
+            facetScore.textContent = score.toFixed(2); // Display zero scores
 
             // Append facet name and score to row, then row to column
             facetRow.appendChild(facetName);
@@ -309,9 +342,6 @@ function displayFacetTotals() {
         facetScoresContainer.appendChild(traitColumn);
     });
 }
-
-
-
 
 // Helper function to find the aspect based on facet name
 function findAspectForFacet(facetName) {
