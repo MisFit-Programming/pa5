@@ -1,4 +1,5 @@
 let selectedQuestionCount = 'all'; // Default to selecting all questions per facet
+let questions = []; // Global variable to store the selected question set
 
 // Display the question selection modal when the page loads
 document.addEventListener('DOMContentLoaded', () => {
@@ -6,50 +7,41 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Function to start the quiz after the user selects a question count
+// After selecting the question set, initialize the quiz correctly
 function startQuiz() {
-    // Get the selected question count from the modal
     selectedQuestionCount = document.querySelector('input[name="question-count"]:checked').value;
 
-    // Filter and shuffle questions based on the selected count
-    selectedQuestions = filterQuestions(selectedQuestionCount);
+    // Assign the appropriate question set based on selection
+    switch (selectedQuestionCount) {
+        case '1':
+            questions = smallQuestions; // Use from Small_Questions.js
+            break;
+        case '2':
+            questions = mediumQuestions; // Use from Medium_Questions.js
+            break;
+        case 'all':
+            questions = fullQuestions; // Use from Full_Questions.js
+            break;
+        default:
+            console.error("Invalid selection");
+            return;
+    }
 
-    // Hide the selection modal and show the test section
+    // Call initializeQuiz to start the quiz after questions are assigned
+    initializeQuiz();
+}
+
+
+
+// Function to initialize and start displaying the quiz after loading questions
+function initializeQuiz() {
+    selectedQuestions = questions; // Use all questions as filtered by selection in startQuiz
     document.getElementById("question-selection").style.display = "none";
     document.getElementById("test-section").style.display = "block";
-    
-    // Display the first question
+
+    setupLikertListeners(); // Call this only once at the start
+
+    currentQuestionIndex = 0; // Reset for a new quiz session
     displayQuestion();
 }
 
-// Function to shuffle an array in-place
-function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-}
-
-// Function to filter and shuffle questions based on the selected count per facet
-function filterQuestions(countSelection) {
-    const questionsByFacet = {};
-
-    // Group questions by their facet
-    questions.forEach(question => {
-        const facet = question.facet.name;
-        if (!questionsByFacet[facet]) {
-            questionsByFacet[facet] = [];
-        }
-        questionsByFacet[facet].push(question);
-    });
-
-    // Select questions based on the chosen count per facet
-    let filteredQuestions = [];
-    Object.values(questionsByFacet).forEach(facetQuestions => {
-        const count = countSelection === 'all' ? facetQuestions.length : parseInt(countSelection);
-        filteredQuestions = filteredQuestions.concat(shuffleArray(facetQuestions).slice(0, count));
-    });
-
-    // Return the final shuffled set of filtered questions
-    return shuffleArray(filteredQuestions);
-}

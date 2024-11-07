@@ -140,7 +140,6 @@ function displayQuestion() {
 
     selectedResponse = responses[currentQuestionIndex] || null;
     updateLikertSelection();
-    setupLikertListeners();
 
     // Show the message for the first question only and prevent duplicates
     if (isFirstQuestion) {
@@ -151,8 +150,8 @@ function displayQuestion() {
         updateTimerDisplay();
         startTimer();
     }
-    // Update progress bar
-    updateProgressBar();
+
+    updateProgressBar(); // Update the progress bar with each question
 }
 
 // Display a message for the first question and pause the timer
@@ -233,24 +232,23 @@ function logFacetScores() {
     console.log("\n--- End of Comparison ---\n");
 }
 
-
 function saveResponse() {
+    //console.trace("Tracing saveResponse calls"); // Add this at the beginning of saveResponse
+    //console.log("saveResponse called"); // This should appear only once per click
+
     const question = selectedQuestions[currentQuestionIndex];
     responses[currentQuestionIndex] = selectedResponse;
 
-    // Update trait scores based on aspect scores
     for (const [aspect, baseScore] of Object.entries(question.facet.scores)) {
         if (scores[aspect] !== undefined) {
             scores[aspect] += baseScore * selectedResponse;
         }
     }
 
-    // Determine the trait in facetScores to update based on facetTraitMapping
     const trait = question.trait;
-    const facetName = question.facet.name.trim(); // Ensure consistent naming with trim
-    const targetTrait = facetTraitMapping[facetName] || trait;  // Use mapped trait if it exists
+    const facetName = question.facet.name.trim();
+    const targetTrait = facetTraitMapping[facetName] || trait;
 
-    // Update facet scores by trait
     if (facetScores[targetTrait] && facetScores[targetTrait][facetName] !== undefined) {
         facetScores[targetTrait][facetName] += selectedResponse;
         //console.log(`Updated ${targetTrait} - ${facetName}: ${facetScores[targetTrait][facetName]}`);
@@ -258,16 +256,9 @@ function saveResponse() {
         console.warn(`Facet "${facetName}" under trait "${trait}" not found in facetScores.`);
     }
 
-    // Update Big 5 scores
     updateBig5Scores();
-
-    // Handle first answer logic if necessary
-    if (isFirstQuestion) {
-        handleFirstAnswer();
-    }
+    if (isFirstQuestion) handleFirstAnswer();
 }
-
-
 
 // Update the scores for Big 5 categories
 function updateBig5Scores() {
