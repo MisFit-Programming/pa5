@@ -439,6 +439,9 @@ button:hover {
         padding: 0;
         background-color: white !important; /* Ensure the background is fully white */
     }
+    footer {
+                display: none;
+            }
     .button {
         display: none !important;
     }

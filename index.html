@@ -149,6 +149,18 @@
     <!-- Ensure `script.js` is loaded last for global functionality -->
     <script src="script.js" defer></script>
 
+    <!-- Footer Section -->
+    <footer>
+        <p>&copy;<span id="current-year"></span> All rights reserved.</p>
+        
+        <!-- JavaScript to Update the Year -->
+        <script>
+            // Set the current year in the footer
+            const yearSpan = document.getElementById('current-year');
+            const currentYear = new Date().getFullYear();
+            yearSpan.textContent = currentYear;
+        </script>
+    </footer>
 
 </body>
 </html>
