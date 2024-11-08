@@ -72,6 +72,41 @@ header, #score-header {
     border-radius: 8px;
 }
 
+/* Login Overlay Styling */
+.login-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.login-container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 300px;
+    text-align: center;
+}
+
+.login-code {
+    font-size: 1.5em;
+    margin: 10px 0;
+}
+
+#pin-input {
+    width: 60px;
+    text-align: center;
+    font-size: 1.2em;
+    margin-left: 5px;
+}
+
+
 /* Progress Indicator Styling */
 .progress-indicator {
     font-size: 1.2em;
@@ -182,6 +217,29 @@ button:hover {
     font-size: 16px;
     margin-top: 1em;
 }
+/* Styles for Report Buttons Section */
+#report-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px; /* Space between buttons */
+    margin-top: 15px; /* Space between question and buttons */
+}
+
+#report-buttons button {
+    padding: 8px 16px;
+    font-size: 0.9em;
+    border: none;
+    border-radius: 5px;
+    background-color: #4CAF50; /* Button background color */
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#report-buttons button:hover {
+    background-color: #45a049; /* Darker green on hover */
+}
+
 
 /* Final Report Styling */
 #final-report {

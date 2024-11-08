@@ -73,8 +73,12 @@
     <div class="bar-segment" data-value="2" tabindex="0" aria-label="Strong Agree">Strong Agree</div>
 </div>
         </div>
-          <!-- Report Issue Button -->
-    <button id="report-issue-button">Report Issue</button>
+    <!-- Report Buttons Section directly below the question container -->
+    <div id="report-buttons" class="report-buttons">
+        <button onclick="sendErrorReportToDiscord('Spelling/Grammar')">Report Spelling / Grammar</button>
+        <button onclick="sendErrorReportToDiscord('Confusing Question')">Report Confusing Question</button>
+        <button onclick="sendErrorReportToDiscord('Other')">Report Other</button>
+    </div>
     </main>
 
 <!-- Final Report Section -->

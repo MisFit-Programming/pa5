@@ -84,7 +84,7 @@ function showSection(sectionId) {
     const sections = ["usage-agreement", "question-selection", "test-section", "final-report", "score-header"];
     sections.forEach(id => {
         document.getElementById(id).style.display = id === sectionId ? (id === "score-header" ? "flex" : "block") : "none";
-    });
+    }); 
 }
 
 // Store prefix when user accepts the agreement
@@ -406,41 +406,39 @@ async function sendErrorReportToDiscord(questionText) {
         console.error("Error occurred while sending error report:", error);
     }
 }
+
 // Generate the test number and current date dynamically
-function setDynamicReportData() {
-    // Retrieve the stored prefix or use "TST" as a fallback
-    const prefix = localStorage.getItem("prefix") || "TST";
-    
-    const randomDigits = Math.floor(10000000 + Math.random() * 90000000); // Generate 8 random digits
-    const testNumber = `${prefix}-${randomDigits}`;
+async function sendErrorReportToDiscord(issueType) {
+    if (!DISCORD_ERROR_URL) {
+        console.error("Discord webhook URL is not defined.");
+        return;
+    }
 
-    // Format the current date as MM/DD/YYYY
-    const today = new Date();
-    const formattedDate = `${today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()}`;
+    const questionText = document.getElementById("question-text")?.innerText || "Unknown Question";
+    const payload = {
+        content: `=-=-=-=-=-=-=-=-=\n**Error Report**\n**Issue Type:** ${issueType}\n**Question Text:** ${questionText}`,
+        username: "Error Reporter",
+        avatar_url: "https://example.com/avatar.png"
+    };
 
-    // Populate test number and date in the report
-    document.getElementById("test-number").textContent = testNumber;
-    document.getElementById("test-date").textContent = formattedDate;
+    try {
+        const response = await fetch(DISCORD_ERROR_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+            alert(`Report sent: ${issueType}`);
+            console.log("Error report sent to Discord successfully.");
+        } else {
+            console.error("Failed to send error report to Discord:", response.statusText);
+        }
+    } catch (error) {
+        console.error("Error occurred while sending error report:", error);
+    }
 }
 
-// Run function on load or when generating the report
-window.onload = setDynamicReportData;
-
-
-// Run function on load or when generating the report
-window.onload = setDynamicReportData;
-
-// Event listener for the Report Issue button
-document.getElementById("report-issue-button").addEventListener("click", () => {
-    const questionText = document.getElementById("question-text")?.innerText || "Unknown Question";
-    console.log("Report Issue button clicked. Question text:", questionText);
-    
-    if (questionText) {
-        sendErrorReportToDiscord(questionText);
-    } else {
-        alert("No question found to report.");
-    }
-});
 document.addEventListener("DOMContentLoaded", () => {
     // Populate test number and date fields if values are available
     document.getElementById("test-number").textContent = examPrefix || "TST-0001";
