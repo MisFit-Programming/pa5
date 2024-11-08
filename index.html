@@ -8,6 +8,17 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- Login Overlay -->
+    <div id="login-overlay" class="login-overlay">
+        <div class="login-container">
+            <h2>Login</h2>
+            <p>Enter the PIN for access</p>
+            <div class="login-code">
+                <span id="alpha-code"></span> - <input id="pin-input" type="password" maxlength="4" placeholder="PIN" />
+            </div>
+            <button onclick="validateLogin()">Submit</button>
+        </div>
+    </div>
     <!-- Question Selection Modal -->
     <div id="question-selection" class="modal" style="display: none;">
         <h2>Select Number of Questions Per Facet</h2>
@@ -18,13 +29,13 @@
             <input type="radio" name="question-count" value="2"> Rigorous analysis (15 minutes)
         </label><br />
         <label>
-            <input type="radio" name="question-count" value="all" checked> Deep Analysis (45 minutes)
+            <input type="radio" name="question-count" value="all" checked> Deep Analysis (30 minutes)
         </label><br />
         <button onclick="startQuiz()">Continue</button>
     </div>
 
     <!-- Usage Agreement Modal -->
-    <div id="usage-agreement" class="modal">
+    <div id="usage-agreement" class="modal" style="display: none;">
         <h2>Software Usage Agreement</h2>
         <p>
             1. Acceptance of Agreement: By using this software, you agree to be bound by the terms of this Agreement. If you disagree, do not use the Software.
@@ -45,31 +56,6 @@
     <header id="score-header" style="display: none;">
         <h1>PersonaMap</h1>
     </header>
-
-    <!-- Scoreboard -->
-    <div id="scoreboard" style="display: none;">
-        <div class="score-section">
-            <h3>Big 5 Traits</h3>
-            <p><strong>Openness:</strong> <span id="openness-score">0</span></p>
-            <p><strong>Conscientiousness:</strong> <span id="conscientiousness-score">0</span></p>
-            <p><strong>Extraversion:</strong> <span id="extraversion-score">0</span></p>
-            <p><strong>Agreeableness:</strong> <span id="agreeableness-score">0</span></p>
-            <p><strong>Neuroticism:</strong> <span id="neuroticism-score">0</span></p>
-        </div>
-        <div class="score-section">
-            <h3>Big 10 Clusters</h3>
-            <p><strong>Intellect:</strong> <span id="intellect-score">0</span></p>
-            <p><strong>Receptivity:</strong> <span id="receptivity-score">0</span></p>
-            <p><strong>Industriousness:</strong> <span id="industriousness-score">0</span></p>
-            <p><strong>Orderliness:</strong> <span id="orderliness-score">0</span></p>
-            <p><strong>Enthusiasm:</strong> <span id="enthusiasm-score">0</span></p>
-            <p><strong>Assertiveness:</strong> <span id="assertiveness-score">0</span></p>
-            <p><strong>Compassion:</strong> <span id="compassion-score">0</span></p>
-            <p><strong>Politeness:</strong> <span id="politeness-score">0</span></p>
-            <p><strong>Volatility:</strong> <span id="volatility-score">0</span></p>
-            <p><strong>Withdrawal:</strong> <span id="withdrawal-score">0</span></p>
-        </div>
-    </div>
 
     <!-- Test Section -->
     <main id="test-section" style="display: none;">
@@ -146,6 +132,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="login.js" defer></script>
     <script src="Small_Questions.js" defer></script>
     <script src="Medium_Questions.js" defer></script>
     <script src="Full_Questions.js" defer></script>

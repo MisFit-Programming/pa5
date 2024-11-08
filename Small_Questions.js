@@ -977,7 +977,7 @@ const smallQuestions = [
                 "Withdrawal": 0.0
             }
         },
-        "question": "The human impact of social policy is more important than the economics."
+        "question": "Social policy should focus on the disadvantaged."
     },
     {
         "trait": "Agreeableness",

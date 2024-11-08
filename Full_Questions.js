@@ -1017,27 +1017,7 @@ const fullQuestions = [
                 "Withdrawal": 0.0
             }
         },
-        "question": "I sometimes have difficulty visualizing things other people describe."
-    },
-    {
-        "trait": "Openness",
-        "aspect": "Intellect",
-        "facet": {
-            "name": "Ingenuity",
-            "scores": {
-                "Intellect": -0.73,
-                "Receptivity": -0.45,
-                "Industriousness": 0.0,
-                "Orderliness": 0.0,
-                "Enthusiasm": 0.0,
-                "Assertiveness": 0.0,
-                "Compassion": 0.0,
-                "Politeness": 0.0,
-                "Volatility": 0.0,
-                "Withdrawal": 0.0
-            }
-        },
-        "question": "When I am part of a team, other people usually come up with most of the ideas."
+        "question": "I find it easy to visualize"
     },
     {
         "trait": "Openness",
@@ -4697,7 +4677,7 @@ const fullQuestions = [
                 "Withdrawal": 0.0
             }
         },
-        "question": "I am always make sure to return favors."
+        "question": "I always return favors"
     },
     {
         "trait": "Conscientiousness",
@@ -8897,7 +8877,7 @@ const fullQuestions = [
                 "Withdrawal": 0.0
             }
         },
-        "question": "The human impact of social policy is more important than the economics."
+        "question": "Social policy should focus on the disadvantaged."
     },
     {
         "trait": "Agreeableness",
@@ -8997,7 +8977,7 @@ const fullQuestions = [
                 "Withdrawal": 0.0
             }
         },
-        "question": "The economics of social policy are more important that the human impact."
+        "question": "Economic realities should guide social policy."
     },
     {
         "trait": "Agreeableness",
@@ -10397,7 +10377,7 @@ const fullQuestions = [
                 "Withdrawal": 0.0
             }
         },
-        "question": "I can see the positive intentions behind peoples actions."
+        "question": "Most people have good intentions."
     },
     {
         "trait": "Agreeableness",
@@ -10457,7 +10437,7 @@ const fullQuestions = [
                 "Withdrawal": 0.0
             }
         },
-        "question": "I assume people I don\u2019t know might be dangerous."
+        "question": "I assume strangers could be dangerous."
     },
     {
         "trait": "Agreeableness",
@@ -10737,7 +10717,7 @@ const fullQuestions = [
                 "Withdrawal": -0.53
             }
         },
-        "question": "I get angry when I need to."
+        "question": "I can get angry when i need to be."
     },
     {
         "trait": "Neuroticism",
@@ -11997,7 +11977,7 @@ const fullQuestions = [
                 "Withdrawal": -0.88
             }
         },
-        "question": "I notice potential threats more than most people."
+        "question": "I am aware of more dangers than others"
     },
     {
         "trait": "Neuroticism",
@@ -12397,7 +12377,7 @@ const fullQuestions = [
                 "Withdrawal": 0.78
             }
         },
-        "question": "I could make a list of some of my fears."
+        "question": "I could list several of my fears."
     },
     {
         "trait": "Neuroticism",

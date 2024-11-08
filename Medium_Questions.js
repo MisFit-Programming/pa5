@@ -1937,7 +1937,7 @@ const mediumQuestions = [
                 "Withdrawal": 0.0
             }
         },
-        "question": "The human impact of social policy is more important than the economics."
+        "question": "Social policy should focus on the disadvantaged."
     },
     {
         "trait": "Agreeableness",
@@ -2357,7 +2357,7 @@ const mediumQuestions = [
                 "Withdrawal": -0.53
             }
         },
-        "question": "I get angry when I need to."
+        "question": "I can get angry when i need to be."
     },
     {
         "trait": "Neuroticism",

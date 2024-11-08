@@ -73,7 +73,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function initializeApp() {
     // Show only the usage agreement initially
-    showSection("usage-agreement");
+    if(BYPASS_LOGIN) {showSection("usage-agreement");}
+        else 
+    {showSection("login-overlay");}
 }
 
 
