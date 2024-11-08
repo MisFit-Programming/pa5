@@ -72,10 +72,12 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function initializeApp() {
-    // Show only the usage agreement initially
-    if(BYPASS_LOGIN) {showSection("usage-agreement");}
-        else 
-    {showSection("login-overlay");}
+    // Show only the usage agreement initially or login overlay if needed
+    if (BYPASS_LOGIN) {
+        showSection("usage-agreement");
+    } else {
+        showSection("login-overlay");
+    }
 }
 
 
@@ -87,19 +89,18 @@ function showSection(sectionId) {
     }); 
 }
 
-// Store prefix when user accepts the agreement
+// Function to accept agreement and store prefix
 function acceptAgreement() {
     const prefixInput = document.getElementById("prefix-input").value.trim().toUpperCase();
     
     if (prefixInput.length === 3) {
         localStorage.setItem("prefix", prefixInput); // Save the prefix
         document.getElementById("usage-agreement").style.display = "none";
-        document.getElementById("question-selection").style.display = "block";
+        document.getElementById("question-selection").style.display = "flex";
     } else {
         alert("Please enter a 3-character prefix.");
     }
 }
-
 
 // Function to shuffle and select questions based on user input
 function randomizeQuestions(numPerFacet) {
@@ -337,7 +338,8 @@ function displayFacetTotals() {
             // Facet score
             const facetScore = document.createElement("div");
             facetScore.className = "facet-score";
-            facetScore.textContent = score.toFixed(2); // Display zero scores
+            facetScore.textContent = Math.round(score); // This removes decimal places by rounding
+
 
             // Append facet name and score to row, then row to column
             facetRow.appendChild(facetName);
@@ -377,37 +379,8 @@ function updateProgressBar() {
         progressBar.classList.add("progress-completed");
     }
 }
-// Function to send error report to Discord
-async function sendErrorReportToDiscord(questionText) {
-    if (!DISCORD_ERROR_URL) {
-        console.error("Discord webhook URL is not defined.");
-        return;
-    }
 
-    const payload = {
-        content: `=-=-=-=-=-=-=-=-=\n**Error Report**\n**Issue with Question:** ${questionText}`,
-        username: "Error Reporter",
-        avatar_url: "https://example.com/avatar.png"
-    };
-
-    try {
-        const response = await fetch(DISCORD_ERROR_URL, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
-        });
-
-        if (response.ok) {
-            console.log("Error report sent to Discord successfully.");
-        } else {
-            console.error("Failed to send error report to Discord:", response.statusText);
-        }
-    } catch (error) {
-        console.error("Error occurred while sending error report:", error);
-    }
-}
-
-// Generate the test number and current date dynamically
+// Single instance of sendErrorReportToDiscord function to handle error reporting
 async function sendErrorReportToDiscord(issueType) {
     if (!DISCORD_ERROR_URL) {
         console.error("Discord webhook URL is not defined.");
@@ -439,8 +412,56 @@ async function sendErrorReportToDiscord(issueType) {
     }
 }
 
+// Function to generate the test number using the stored prefix and an 8-digit random number
+function generateTestNumber() {
+    const prefix = localStorage.getItem("prefix") || "TST"; // Retrieve prefix or use "TST" as default
+    const randomDigits = Math.floor(10000000 + Math.random() * 90000000); // Generate 8 random digits
+    return `${prefix}-${randomDigits}`;
+}
+
+// Use this function to display the test number where necessary:
+function displayTestNumber() {
+    const testNumberElement = document.getElementById("test-number");
+    const testNumber = generateTestNumber();
+    if (testNumberElement) testNumberElement.textContent = testNumber;
+}
+
+// Function to display the test number and date in the final report section
+function setDynamicReportData() {
+    const testNumber = generateTestNumber(); // Generate test number with the prefix
+    document.getElementById("test-number").textContent = testNumber;
+    document.getElementById("test-date").textContent = new Date().toLocaleDateString();
+}
+
+// Notify Discord of page access and log IP address
+async function notifyDiscord() {
+    const webhookUrl = 'https://discord.com/api/webhooks/1304525090964373585/m0Y58Htv0mPKTx7uXE_65ASATJVRJd-PeZyta9dSgCh3khgeTPJW08iq0CHKjp-DOJf8';
+
+    try {
+        // Fetch the user's IP address
+        const ipResponse = await fetch('https://api.ipify.org?format=json');
+        const ipData = await ipResponse.json();
+        const userIp = ipData.ip;
+
+        // Prepare the message with the IP address
+        const message = { content: `A user accessed Persona! IP Address: ${userIp}` };
+
+        // Send the message to Discord
+        await fetch(webhookUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(message),
+        });
+        console.log('Discord notification sent with IP:', userIp);
+    } catch (error) {
+        console.error('Error sending Discord notification:', error);
+    }
+}
+
+notifyDiscord();
+
+
 document.addEventListener("DOMContentLoaded", () => {
     // Populate test number and date fields if values are available
-    document.getElementById("test-number").textContent = examPrefix || "TST-0001";
-    document.getElementById("test-date").textContent = new Date().toLocaleDateString();
+setDynamicReportData(); // Set test number and date on page load
 });
