@@ -2357,7 +2357,7 @@ const mediumQuestions = [
                 "Withdrawal": -0.53
             }
         },
-        "question": "I can get angry when i need to be."
+        "question": "I can get angry when i need to."
     },
     {
         "trait": "Neuroticism",
