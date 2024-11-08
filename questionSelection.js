@@ -28,12 +28,11 @@ function startQuiz() {
     initializeQuiz();
 }
 
-
-
-
 // Function to initialize and start displaying the quiz after loading questions
 function initializeQuiz() {
-    selectedQuestions = questions; // Use all questions as filtered by selection in startQuiz
+    // Shuffle questions for randomized order
+    selectedQuestions = shuffleArray(questions); 
+
     document.getElementById("question-selection").style.display = "none";
     document.getElementById("test-section").style.display = "block";
 
@@ -43,3 +42,11 @@ function initializeQuiz() {
     displayQuestion();
 }
 
+// Helper function to shuffle an array
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
