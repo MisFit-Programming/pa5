@@ -437,77 +437,70 @@ button:hover {
     body {
         margin: 0;
         padding: 0;
-        background-color: white !important; /* Ensure the background is fully white */
+        background-color: white !important;
     }
-    footer {
-                display: none;
-            }
     .button {
         display: none !important;
     }
-    .report-right {
-        text-align: left !important;
-        padding-left: 10px !important; /* Reinforce padding */
+    #final-report {
+        display: block !important;
+        width: 100% !important;
+        max-width: none !important;
+        width: 612px; /* Exact width for 8.5x11 inches */
+        height: 792px; /* Exact height for 8.5x11 inches */
+        height: auto;
+        padding: 0.25in; /* Further reduced padding */
+        box-sizing: border-box;
+        font-size: 0.8em; /* Slightly smaller font size */
+        line-height: 1.05; /* Further reduced line-height */
     }
-    
-    .user-info {
-        align-items: flex-start !important;
+    .final-report-container {
+        display: flex;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        gap: 4px; /* Slightly smaller gap */
     }
-    
-    .user-info p {
-        text-align: left !important;
-        margin: 0 0 10px 0 !important;
+    .report-left, .report-right {
+        padding: 0.08in;
+        margin-bottom: 0;
+    }
+    .chart-container, .trait-column {
+        width: 100% !important;
+        max-width: none;
+        box-sizing: border-box;
+        padding: 0;
+        margin-bottom: 0.05in;
     }
     .chart-container canvas {
         width: 100% !important;
-        height: 360px !important; /* Set your desired height */
-        }
-
-    /* Ensure each chart container uses full width */
-    .chart-container {
-        width: 100% !important;
-        max-width: none !important;
-        max-height: none !important;
+        height: 100px !important; /* Reduced chart height further */
+    }
+    #facet-scores {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 3px; /* Reduced gap between trait columns */
+        width: 100%;
+        margin: 0 auto;
         padding: 0;
-        margin: 0;
-        box-sizing: border-box;
     }
-    /* Full-page styling for the final report */
-    #final-report {
-        display: block !important;
-        max-width: none;
-        width: 100% !important; /* Span the full page width */
-        max-height: none !important;
-        height: auto; /* Allow content to determine height */
-        margin: 0 !important;
-        padding: 0.5in !important; /* Adjust as needed */
-        box-sizing: border-box;
-        font-size: 1em;
-        line-height: 1.2;
-    }
-
-    /* Ensure that internal containers don't restrict the layout */
-    .final-report-container, .report-left, .report-right, #facet-scores, .trait-column {
-        width: 100% !important;
-        max-width: none !important;
-        max-height: none !important;
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
-    /* Make sure trait columns use full width and allow wrapping */
-    .trait-column {   
+    .trait-column {
         display: inline-block;
-        width: calc(100% / 3); /* Three columns per row */
+        width: calc(100% / 3 - 0.05in);
+        padding: 0.03in; /* Further reduced padding within each trait column */
+        box-sizing: border-box;
         vertical-align: top;
-        padding: 0.2in;
+        margin: 0;
     }
-    /* Re-enforce in print specifically */
+    .trait-column .facet-row {
+        font-size: 0.75em; /* Further reduced font size within facet rows */
+        padding: 1px 0; /* Added minimal padding to keep readability */
+    }
     .trait-column.trait-openness { background-color: #fefa92 !important; }
     .trait-column.trait-conscientiousness { background-color: #80c7aa !important; }
     .trait-column.trait-extraversion { background-color: #ffe9bc !important; }
     .trait-column.trait-agreeableness { background-color: #bbeaff !important; }
     .trait-column.trait-neuroticism { background-color: #e0cedd !important; }
     .trait-column.trait-stability { background-color: #d3d3f5 !important; }
+    ;
 }
