@@ -6,6 +6,7 @@ let selectedQuestions = []; // Selected questions set based on user choices
 let selectedResponse = null;
 let countdown;
 let timeLeft = 10;
+const ENABLE_TIMER = false; // Set to false to disable the timer
 let isFirstQuestion = true;  // Flag to identify the first question
 const responses = {};
 let examPrefix = "";
@@ -185,6 +186,8 @@ function handleFirstAnswer() {
 
 // Timer management functions
 function startTimer() {
+    if (!ENABLE_TIMER) return; // Exit if timer is disabled
+
     clearInterval(countdown);
     countdown = setInterval(() => {
         timeLeft--;
@@ -200,12 +203,23 @@ function startTimer() {
 
 // Update the timer display with a color gradient
 function updateTimerDisplay() {
+    if (!ENABLE_TIMER) {
+        document.getElementById("timer").style.display = "none"; // Hide timer if disabled
+        return;
+    }
+    document.getElementById("timer").style.display = "block"; // Show timer if enabled
+
     const timerElement = document.getElementById("timer");
     timerElement.innerText = `Time left: ${timeLeft}s`;
 
     const green = Math.floor((timeLeft / 10) * 255);
     const red = 255 - green;
     timerElement.style.color = `rgb(${red}, ${green}, 0)`;
+}
+
+function formatDate(date) {
+    const options = { day: '2-digit', month: 'long', year: 'numeric' };
+    return date.toLocaleDateString('en-GB', options);
 }
 
 // Default response if timer expires
@@ -428,9 +442,10 @@ function displayTestNumber() {
 
 // Function to display the test number and date in the final report section
 function setDynamicReportData() {
-    const testNumber = generateTestNumber(); // Generate test number with the prefix
-    document.getElementById("test-number").textContent = testNumber;
-    document.getElementById("test-date").textContent = new Date().toLocaleDateString();
+    const examPrefix = generateTestNumber();
+    document.getElementById("test-number").textContent = examPrefix;
+    const formattedDate = formatDate(new Date());
+    document.getElementById("test-date").textContent = formattedDate;
 }
 
 // Notify Discord of page access and log IP address

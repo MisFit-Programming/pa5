@@ -3177,7 +3177,7 @@ const fullQuestions = [
                 "Withdrawal": 0.0
             }
         },
-        "question": "I finds it easy to get right to work."
+        "question": "I find it easy to get right to work."
     },
     {
         "trait": "Conscientiousness",
@@ -10777,7 +10777,7 @@ const fullQuestions = [
                 "Withdrawal": 0.53
             }
         },
-        "question": "I take things as the come."
+        "question": "I take things as they come."
     },
     {
         "trait": "Neuroticism",
@@ -10937,7 +10937,7 @@ const fullQuestions = [
                 "Withdrawal": -0.54
             }
         },
-        "question": "I would describe myself as amiable."
+        "question": "I am easy to get along with."
     },
     {
         "trait": "Neuroticism",
