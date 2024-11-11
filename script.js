@@ -299,12 +299,21 @@ function autoAdvance() {
 }
 
 // Show the final report, render charts, and display facet scores
+// Show the final report, render charts, and display facet scores
 function showFinalReport() {
     console.log("Showing Final Report");
     showSection("final-report");
+
+    // Render charts and facet scores
     renderAllCharts();
     displayFacetTotals();
+
+    // Delay PDF export to ensure everything is rendered fully
+    setTimeout(() => {
+        exportToPDF();
+    }, 1000); // 1-second delay to allow for rendering
 }
+
 
 function displayFacetTotals() {
     const facetScoresContainer = document.getElementById("facet-scores");

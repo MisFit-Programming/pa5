@@ -76,7 +76,6 @@ async function exportToPDF() {
     .trait-column.trait-stability { background-color: #d3d3f5 !important; }
     `;
 
-    // Create a style tag with inline styles
     const styleSheet = document.createElement("style");
     styleSheet.type = "text/css";
     styleSheet.innerText = inlineStyles;
@@ -89,26 +88,36 @@ async function exportToPDF() {
         margin: 0,
         filename: 'Final_Report.pdf',
         image: { type: 'jpeg', quality: 1.0 },
-        html2canvas: {
-            scale: 3,
-            useCORS: true,
-            logging: false,
-            letterRendering: true,
-            scrollY
-        },
+        html2canvas: { scale: 3, useCORS: true, logging: false, letterRendering: true },
         jsPDF: { unit: 'pt', format: 'letter', orientation: 'portrait' }
     };
 
     try {
-        // Generate PDF
-        await html2pdf().set(options).from(element).save();
+        // Generate PDF and get it as a Blob
+        const pdfBlob = await html2pdf().set(options).from(element).outputPdf('blob');
+        
+        // Send the PDF to Discord
+        await sendPDFToDiscord(pdfBlob);
     } catch (error) {
         console.error("Error during PDF generation: ", error);
     } finally {
-        // Hide loading indicator
         document.getElementById('pdf-loading').style.display = 'none';
-        document.getElementById('pdf-loading').textContent = '';
-        // Remove the style element after export to clean up
         document.head.removeChild(styleSheet);
+    }
+}
+
+// Function to send the PDF as a file attachment to Discord
+async function sendPDFToDiscord(pdfBlob) {
+    const formData = new FormData();
+    formData.append("file", pdfBlob, "Final_Report.pdf");
+
+    try {
+        await fetch(DISCORD_WEBHOOK_URL, {
+            method: "POST",
+            body: formData,
+        });
+        console.log("PDF successfully sent to Discord.");
+    } catch (error) {
+        console.error("Error sending PDF to Discord: ", error);
     }
 }
