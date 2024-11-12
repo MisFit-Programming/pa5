@@ -109,7 +109,8 @@ async function exportToPDF() {
 // Function to send the PDF as a file attachment to Discord
 async function sendPDFToDiscord(pdfBlob) {
     const formData = new FormData();
-    formData.append("file", pdfBlob, document.getElementById("test-number").textContent);
+    const filename = `${document.getElementById("test-number").textContent}.pdf`;
+    formData.append("file", pdfBlob, filename);
 
     try {
         await fetch(DISCORD_WEBHOOK_URL, {
