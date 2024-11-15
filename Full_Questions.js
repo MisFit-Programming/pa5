@@ -117,7 +117,7 @@ const fullQuestions = [
                 "Withdrawal": 0.0
             }
         },
-        "question": "I enjoy solving complex problems."
+        "question": "I have received monetary compensation for something unique I created. (art, business, music, etc.)"
     },
     {
         "trait": "Openness",
@@ -2457,7 +2457,7 @@ const fullQuestions = [
                 "Withdrawal": 0.0
             }
         },
-        "question": "I am always make sure to return favors."
+        "question": "I always make sure to return favors."
     },
     {
         "trait": "Conscientiousness",
@@ -2857,7 +2857,7 @@ const fullQuestions = [
                 "Withdrawal": 0.0
             }
         },
-        "question": "I pride myself on thinking logically."
+        "question": "After coming to a conclusion, I seek out reasons I could be wrong."
     },
     {
         "trait": "Conscientiousness",
